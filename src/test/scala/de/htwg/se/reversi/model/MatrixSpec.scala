@@ -30,14 +30,14 @@ class MatrixSpec extends AnyWordSpec {
         matrix.cell(5, 5) should be("Q")
       }
       "put cells and be immutable" in {
-        val returned = matrix.putCell(3,2, "H")
-        matrix.cell(3,2) should be("Q")
-        returned.cell(3,2) should be("H")
+        val returned = matrix.putCell(3, 2, "H")
+        matrix.cell(3, 2) should be("Q")
+        returned.cell(3, 2) should be("H")
       }
       "be fillable" in {
         val BMatrix = matrix.fill("B")
-        matrix.cell(0,0) should be("Q")
-        BMatrix.cell(0,0) should be("B")
+        matrix.cell(0, 0) should be("Q")
+        BMatrix.cell(0, 0) should be("B")
       }
     }
   }
