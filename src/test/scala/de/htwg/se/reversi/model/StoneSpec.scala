@@ -1,15 +1,25 @@
 package de.htwg.se.reversi.model
 
+import de.htwg.se.reversi.model.Stone.{Black, Nothing, White}
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.matchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers.*
 
 class StoneSpec extends AnyWordSpec {
   "A Stone" when {
     "white" should {
-      val white = Stone.White
       "be O" in {
-        white.toString should be("O")
+        Stone.White.toString should be("O")
+      }
+    }
+    "black" should {
+      "be X" in {
+        Stone.Black.toString should be("X")
+      }
+    }
+    "nothing" should {
+      "be whitespace" in {
+        Stone.Nothing.toString should be(" ")
       }
     }
   }
