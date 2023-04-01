@@ -1,7 +1,5 @@
 package de.htwg.se.reversi.model
 
-import de.htwg.se.reversi.model.Stone.{Black, Nothing, White}
-import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers.*
 
