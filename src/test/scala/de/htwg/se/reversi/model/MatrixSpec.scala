@@ -9,7 +9,7 @@ class MatrixSpec extends AnyWordSpec {
       "have the correct size" in {
         val matrix = new Matrix[String](10, "H")
         matrix.size should be(10)
-        matrix.rows.size should be(10)
+        matrix.row(0).size should be(10)
       }
       "have the correct element" in {
         val matrix = new Matrix[String](10, "ABC")
@@ -24,7 +24,7 @@ class MatrixSpec extends AnyWordSpec {
       }
       "have the current size" in {
         matrix.size should be(6)
-        matrix.rows.size should be(6)
+        matrix.row(0).size should be(6)
       }
       "have the correct element" in {
         matrix.cell(5, 5) should be("Q")
