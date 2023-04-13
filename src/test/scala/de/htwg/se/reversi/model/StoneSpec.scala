@@ -1,7 +1,7 @@
 package de.htwg.se.reversi.model
 
-import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers.*
+import org.scalatest.wordspec.AnyWordSpec
 
 class StoneSpec extends AnyWordSpec {
   "A Stone" when {

@@ -9,7 +9,7 @@ class MatrixSpec extends AnyWordSpec {
       "have the correct size" in {
         val matrix = new Matrix[String](10, "H")
         matrix.size should be(10)
-        matrix.rows.size should be(10)
+        matrix.row(0).size should be(10)
       }
       "have the correct element" in {
         val matrix = new Matrix[String](10, "ABC")
@@ -24,20 +24,20 @@ class MatrixSpec extends AnyWordSpec {
       }
       "have the current size" in {
         matrix.size should be(6)
-        matrix.rows.size should be(6)
+        matrix.row(0).size should be(6)
       }
       "have the correct element" in {
         matrix.cell(5, 5) should be("Q")
       }
       "put cells and be immutable" in {
-        val returned = matrix.putCell(3,2, "H")
-        matrix.cell(3,2) should be("Q")
-        returned.cell(3,2) should be("H")
+        val returned = matrix.putCell(3, 2, "H")
+        matrix.cell(3, 2) should be("Q")
+        returned.cell(3, 2) should be("H")
       }
       "be fillable" in {
         val BMatrix = matrix.fill("B")
-        matrix.cell(0,0) should be("Q")
-        BMatrix.cell(0,0) should be("B")
+        matrix.cell(0, 0) should be("Q")
+        BMatrix.cell(0, 0) should be("B")
       }
     }
   }
