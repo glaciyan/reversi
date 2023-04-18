@@ -8,8 +8,8 @@ class FieldSpec extends AnyWordSpec {
   val eol: String = sys.props("line.separator")
 
   "A Field" when {
-    val emptyField = Field(new Matrix(8, Nothing))
-    "with empty fields" should {
+    "without padding" should {
+      val emptyField = Field(new Matrix(8, Nothing), 0)
       "have a correct bar" in {
         emptyField.bar should be("+-+-+-+-+-+-+-+-+" + eol)
       }
@@ -17,20 +17,49 @@ class FieldSpec extends AnyWordSpec {
         emptyField.row(0) should be("| | | | | | | | |" + eol)
       }
     }
-    "with some stones" should {
-      val playingField = emptyField
-        .put(0, 0, White)
-        .put(3, 4, Black)
-        .put(3, 3, Black)
-        .put(0, 0, Black)
-        .put(0, 4, White)
+    "without padding and stones" should {
+      "with some stones" should {
+        val playingField = Field(new Matrix(8, Nothing), 0)
+          .put(0, 0, White)
+          .put(3, 4, Black)
+          .put(3, 3, Black)
+          .put(0, 0, Black)
+          .put(0, 4, White)
 
-      "have stones print" in {
-        playingField.row(0) should be ("|X| | | |O| | | |" + eol)
-        playingField.row(3) should be ("| | | |X|X| | | |" + eol)
+        "have stones print" in {
+          playingField.row(0) should be("|X| | | |O| | | |" + eol)
+          playingField.row(3) should be("| | | |X|X| | | |" + eol)
+        }
+        "have a correct playing field" in {
+          playingField.display should be(
+            """+-+-+-+-+-+-+-+-+
+              #|X| | | |O| | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | |X|X| | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #""".stripMargin('#'))
+        }
       }
-      "have correct field" in {
-        playingField.display should be("""+""")
+    }
+    "with padding" should {
+      val field = Field(new Matrix(4, Nothing))
+      "have a correct bar" in {
+        field.bar should be("+---+---+---+---+" + eol)
+      }
+      "have an empty row" in {
+        field.row(0) should be("|   |   |   |   |" + eol)
       }
     }
   }
