@@ -29,3 +29,8 @@ import scala.io.StdIn.{readLine, readf, readf3}
         field = field.put(y, x, stone)
     }
   }
+
+def findWinner(field: Field): Stone = field.m.row(0) match {
+  case Stone.White :: Stone.White :: Stone.White :: _ => Stone.White
+  case Stone.White :: Stone.White :: Stone.White :: _ => Stone.White
+}
