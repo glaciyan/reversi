@@ -1,45 +1,14 @@
-package de.htwg.se.reversi.model
+case class Field(m: Matrix[Stone] = new Matrix(8, Stone.Nothing), padding: Int = 1) {
+  def size: Int = m.size
 
-import de.htwg.se.reversi.model
-import de.htwg.se.reversi.model.Main.spielfeld
+  val eol: String = sys.props("line.separator")
 
-// TUI Spielfeld Klasse
+  def bar: String = (("+" + "-" * ((padding * 2) + 1)) * size) + "+" + eol
 
-class TuiSpielfeld(size: Int) {
-  private val spielfeld = Array.ofDim[Char](size, size)
+  def row(row: Int): String = m.row(row).mkString("|" + (" " * padding), (" " * padding) + "|" + (" " * padding), (" " * padding) + "|") + eol
 
-  // Spielfeld initialisieren
-  def init(): Unit = {
-    for (i <- 0 until size; j <- 0 until size) {
-      spielfeld(i)(j) = '.'
-    }
-  }
+  def put(row: Int, col: Int, stone: Stone): Field = copy(m.putCell(row, col, stone))
 
-  // Spielfeld anzeigen
-  def display(): String = {
-    val sb = new StringBuilder
-    sb.append("Spielfeld:\n")
-    for (i <- 0 until size) {
-      for (j <- 0 until size) {
-        sb.append(s"${spielfeld(i)(j)} ")
-      }
-      sb.append("\n")
-    }
-    sb.toString()
-  }
-
-  // Spielfeld aktualisieren
-  def update(x: Int, y: Int, value: Char): Unit = {
-    spielfeld(x)(y) = value
-  }
+  def display: String = (0 until size).map(row).mkString(bar, bar, bar)
 }
 
-// Beispielverwendung
-object Main extends App {
-  val size = 8
-  val spielfeld = new TuiSpielfeld(size)
-  spielfeld.init()
-  spielfeld.update(1, 1, 'X')
-  spielfeld.update(3, 4, 'O')
-  print(spielfeld.display())    //Spielfeld auf der Konsole ausgeben
-}

@@ -1,21 +1,66 @@
-import org.scalatest.funsuite.AnyFunSuite
-import de.htwg.se.reversi.model.TuiSpielfeld
+package de.htwg.se.reversi.model
 
-class TuiSpielfeldTest extends AnyFunSuite {
-  test("Test Spielfeld-Initialisierung") {
-    val size = 3
-    val spielfeld = new TuiSpielfeld(size)
-    spielfeld.init()
-    assert(spielfeld.display() == "Spielfeld:\n. . . \n. . . \n. . . \n")
-  }
+import de.htwg.se.reversi.model.Stone.{Nothing, White, Black}
+import org.scalatest.matchers.should.Matchers.*
+import org.scalatest.wordspec.AnyWordSpec
 
-  test("Test Spielfeld-Aktualisierung") {
-    val size = 3
-    val spielfeld = new TuiSpielfeld(size)
-    spielfeld.init()
-    spielfeld.update(0, 0, 'X')
-    spielfeld.update(1, 1, 'O')
-    spielfeld.update(2, 2, 'X')
-    assert(spielfeld.display() == "Spielfeld:\nX . . \n. O . \n. . X \n")
+class FieldSpec extends AnyWordSpec {
+  val eol: String = sys.props("line.separator")
+
+  "A Field" when {
+    "without padding" should {
+      val emptyField = Field(new Matrix(8, Nothing), 0)
+      "have a correct bar" in {
+        emptyField.bar should be("+-+-+-+-+-+-+-+-+" + eol)
+      }
+      "have an empty row" in {
+        emptyField.row(0) should be("| | | | | | | | |" + eol)
+      }
+    }
+    "without padding and stones" should {
+      "with some stones" should {
+        val playingField = Field(new Matrix(8, Nothing), 0)
+          .put(0, 0, White)
+          .put(3, 4, Black)
+          .put(3, 3, Black)
+          .put(0, 0, Black)
+          .put(0, 4, White)
+
+        "have stones print" in {
+          playingField.row(0) should be("|X| | | |O| | | |" + eol)
+          playingField.row(3) should be("| | | |X|X| | | |" + eol)
+        }
+        "have a correct playing field" in {
+          playingField.display should be(
+            """+-+-+-+-+-+-+-+-+
+              #|X| | | |O| | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | |X|X| | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #| | | | | | | | |
+              #+-+-+-+-+-+-+-+-+
+              #""".stripMargin('#'))
+        }
+      }
+    }
+    "with padding" should {
+      val field = Field(new Matrix(4, Nothing))
+      "have a correct bar" in {
+        field.bar should be("+---+---+---+---+" + eol)
+      }
+      "have an empty row" in {
+        field.row(0) should be("|   |   |   |   |" + eol)
+      }
+    }
   }
 }
