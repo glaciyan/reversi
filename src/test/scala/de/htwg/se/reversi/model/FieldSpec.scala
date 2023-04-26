@@ -6,6 +6,8 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class FieldSpec extends AnyWordSpec {
   val eol: String = sys.props("line.separator")
+  var w: String = Stone.White.toString
+  var b: String = Stone.Black.toString
 
   "A Field" when {
     "without padding" should {
@@ -27,19 +29,19 @@ class FieldSpec extends AnyWordSpec {
           .put(0, 4, White)
 
         "have stones print" in {
-          playingField.row(0) should be("|X| | | |O| | | |" + eol)
-          playingField.row(3) should be("| | | |X|X| | | |" + eol)
+          playingField.row(0) should be(s"|${b}| | | |${w}| | | |" + eol)
+          playingField.row(3) should be(s"| | | |${b}|${b}| | | |" + eol)
         }
         "have a correct playing field" in {
           playingField.display should be(
-            """+-+-+-+-+-+-+-+-+
-              #|X| | | |O| | | |
+            s"""+-+-+-+-+-+-+-+-+
+              #|${b}| | | |${w}| | | |
               #+-+-+-+-+-+-+-+-+
               #| | | | | | | | |
               #+-+-+-+-+-+-+-+-+
               #| | | | | | | | |
               #+-+-+-+-+-+-+-+-+
-              #| | | |X|X| | | |
+              #| | | |${b}|${b}| | | |
               #+-+-+-+-+-+-+-+-+
               #| | | | | | | | |
               #+-+-+-+-+-+-+-+-+

@@ -8,6 +8,7 @@ case class Field(m: Matrix[Stone] = new Matrix(8, Stone.Nothing), padding: Int =
   def bar: String = (("+" + "-" * ((padding * 2) + 1)) * size) + "+" + eol
 
   def row(row: Int): String = m.row(row).mkString("|" + (" " * padding), (" " * padding) + "|" + (" " * padding), (" " * padding) + "|") + eol
+  def stones(row: Int): String = m.row(row).mkString("") + eol
 
   def put(row: Int, col: Int, stone: Stone): Field = copy(m.putCell(row, col, stone))
 
