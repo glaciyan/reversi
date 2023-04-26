@@ -6,15 +6,15 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class FieldSpec extends AnyWordSpec {
   val eol: String = sys.props("line.separator")
-  var w: String = Stone.White.toString
-  var b: String = Stone.Black.toString
+  var W: String = Stone.White.toString
+  var B: String = Stone.Black.toString
   var e: String = Stone.Nothing.toString
 
   "A Field" when {
     "without padding" should {
       val emptyField = Field(new Matrix(8, Nothing))
       "have an empty row" in {
-        emptyField.row(0) should be(s"${e}${e}${e}${e}${e}${e}${e}${e}")
+        emptyField.row(0) should be(s"$e$e$e$e$e$e$e$e")
       }
     }
     "without padding and stones" should {
@@ -27,19 +27,19 @@ class FieldSpec extends AnyWordSpec {
           .put(0, 4, White)
 
         "have stones print" in {
-          playingField.row(0) should be(s"${b}${e}${e}${e}${w}${e}${e}${e}")
-          playingField.row(3) should be(s"${e}${e}${e}${b}${b}${e}${e}${e}")
+          playingField.row(0) should be(s"$B$e$e$e$W$e$e$e")
+          playingField.row(3) should be(s"$e$e$e$B$B$e$e$e")
         }
         "have a correct playing field" in {
           playingField.display should be(
-            s"""${b}${e}${e}${e}${w}${e}${e}${e}
-              #${e}${e}${e}${e}${e}${e}${e}${e}
-              #${e}${e}${e}${e}${e}${e}${e}${e}
-              #${e}${e}${e}${b}${b}${e}${e}${e}
-              #${e}${e}${e}${e}${e}${e}${e}${e}
-              #${e}${e}${e}${e}${e}${e}${e}${e}
-              #${e}${e}${e}${e}${e}${e}${e}${e}
-              #${e}${e}${e}${e}${e}${e}${e}${e}""".stripMargin('#'))
+            s"""$B$e$e$e$W$e$e$e
+              #$e$e$e$e$e$e$e$e
+              #$e$e$e$e$e$e$e$e
+              #$e$e$e$B$B$e$e$e
+              #$e$e$e$e$e$e$e$e
+              #$e$e$e$e$e$e$e$e
+              #$e$e$e$e$e$e$e$e
+              #$e$e$e$e$e$e$e$e""".stripMargin('#'))
         }
       }
     }
