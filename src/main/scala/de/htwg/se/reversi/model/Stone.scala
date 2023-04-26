@@ -1,9 +1,9 @@
 package de.htwg.se.reversi.model
 
 enum Stone(view: Option[String]) {
-  override def toString: String = view.getOrElse(" ")
+  override def toString: String = view.getOrElse("🟩")
 
-  case White extends Stone(Some("O"))
-  case Black extends Stone(Some("X"))
+  case White extends Stone(Some("⚪"))
+  case Black extends Stone(Some("⚫"))
   case Nothing extends Stone(None)
 }

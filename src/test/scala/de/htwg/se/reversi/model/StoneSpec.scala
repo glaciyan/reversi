@@ -6,18 +6,18 @@ import org.scalatest.wordspec.AnyWordSpec
 class StoneSpec extends AnyWordSpec {
   "A Stone" when {
     "white" should {
-      "be O" in {
-        Stone.White.toString should be("O")
+      "be white dot" in {
+        Stone.White.toString should be("⚪")
       }
     }
     "black" should {
-      "be X" in {
-        Stone.Black.toString should be("X")
+      "be black dot" in {
+        Stone.Black.toString should be("⚫")
       }
     }
     "nothing" should {
-      "be whitespace" in {
-        Stone.Nothing.toString should be(" ")
+      "be green square" in {
+        Stone.Nothing.toString should be("🟩")
       }
     }
   }
