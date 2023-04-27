@@ -7,5 +7,5 @@ trait Observable {
 
   def remove(o: Observer) = listeners = listeners.filterNot(_ == o)
 
-  def notifyObservers(): Unit = listeners.foreach(_.update())
+  def notifyObservers(e: Event): Unit = listeners.foreach(_.update(e))
 }
