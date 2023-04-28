@@ -1,6 +1,6 @@
 package de.htwg.se.reversi.views
 
-import de.htwg.se.reversi.controller.GameState
+import de.htwg.se.reversi.controller.Controller
 import de.htwg.se.reversi.util.Event.{AlreadyPlacedError, GameDone, Placed}
 import de.htwg.se.reversi.util.{Event, Observer}
 
@@ -8,14 +8,14 @@ import java.text.ParseException
 import java.util.{InputMismatchException, Scanner}
 import scala.io.StdIn
 
-class TUIView(state: GameState) extends GameUI, Observer {
+class TUIView(state: Controller) extends GameUI, Observer {
   state.add(this)
 
   override def run(): Unit = inputLoop()
 
   private def inputLoop(): Unit = {
     println(state.field.display)
-    while !state.finished do {
+    while !state.finished do { // TODO: mit rekursion testbar machen
       print(s"${state.currentPlayer} > ")
       val input = waitForInput()
       input match {
@@ -25,6 +25,7 @@ class TUIView(state: GameState) extends GameUI, Observer {
     }
   }
 
+  // TODO: testen
   private def waitForInput(): Option[(Int, Int)] = {
     try {
       val input = StdIn.readLine()

@@ -5,7 +5,8 @@ import de.htwg.se.reversi.model.{Field, Stone}
 import de.htwg.se.reversi.util.Event.{AlreadyPlacedError, GameDone, Placed}
 import de.htwg.se.reversi.util.Observable
 
-class GameState(var field: Field, var currentPlayer: Stone, var finished: Boolean) extends Observable {
+// TODO: testen
+class Controller(var field: Field, var currentPlayer: Stone, var finished: Boolean) extends Observable {
   var count = 0;
 
   def put(row: Int, col: Int) = {

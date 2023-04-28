@@ -1,5 +1,6 @@
 package de.htwg.se.reversi.util
 
+// TODO: testen
 trait Observable {
   private var listeners: Vector[Observer] = Vector()
 
