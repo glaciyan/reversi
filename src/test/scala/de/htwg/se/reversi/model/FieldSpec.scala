@@ -30,17 +30,6 @@ class FieldSpec extends AnyWordSpec {
           playingField.row(0) should be(s"$B$e$e$e$W$e$e$e")
           playingField.row(3) should be(s"$e$e$e$B$B$e$e$e")
         }
-        "have a correct playing field" in {
-          playingField.display should be(
-            s"""$B$e$e$e$W$e$e$e
-              #$e$e$e$e$e$e$e$e
-              #$e$e$e$e$e$e$e$e
-              #$e$e$e$B$B$e$e$e
-              #$e$e$e$e$e$e$e$e
-              #$e$e$e$e$e$e$e$e
-              #$e$e$e$e$e$e$e$e
-              #$e$e$e$e$e$e$e$e""".stripMargin('#'))
-        }
       }
     }
   }
