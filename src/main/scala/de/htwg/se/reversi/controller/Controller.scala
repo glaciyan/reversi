@@ -7,17 +7,14 @@ import de.htwg.se.reversi.util.Observable
 
 // TODO: testen
 class Controller(var field: Field, var currentPlayer: Stone, var finished: Boolean) extends Observable {
-  var count = 0;
-
   def put(row: Int, col: Int) = {
     field.getStone(row, col) match {
       case Nothing =>
         field = field.put(row, col, currentPlayer)
         currentPlayer = nextPlayer
-        count += 1
-        if count > 4 then
-          finished = true
-          notifyObservers(GameDone)
+//        if gameFinished then
+//          finished = true
+//          notifyObservers(GameDone)
         notifyObservers(Placed)
       case _: Stone => notifyObservers(AlreadyPlacedError)
     }
