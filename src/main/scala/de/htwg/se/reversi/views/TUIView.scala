@@ -13,7 +13,7 @@ class TUIView(state: Controller) extends GameUI, Observer {
 
   override def run(): Unit = inputLoop()
 
-  private def inputLoop(): Unit = {
+  def inputLoop(): Unit = {
     println(state.field.display)
     while !state.finished do { // TODO: mit rekursion testbar machen
       print(s"${state.currentPlayer} > ")
@@ -26,7 +26,7 @@ class TUIView(state: Controller) extends GameUI, Observer {
   }
 
   // TODO: testen
-  private def waitForInput(): Option[(Int, Int)] = {
+  def waitForInput(): Option[(Int, Int)] = {
     try {
       val input = StdIn.readLine()
       val scanner = new Scanner(input)
