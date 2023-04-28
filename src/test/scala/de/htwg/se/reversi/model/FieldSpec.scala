@@ -30,6 +30,10 @@ class FieldSpec extends AnyWordSpec {
           playingField.row(0) should be(s"$B$e$e$e$W$e$e$e")
           playingField.row(3) should be(s"$e$e$e$B$B$e$e$e")
         }
+
+        "be able to ge ta single stone" in {
+          playingField.getStone(0, 4) should be(White)
+        }
       }
     }
   }
