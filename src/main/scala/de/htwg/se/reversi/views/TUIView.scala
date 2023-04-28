@@ -8,25 +8,25 @@ import java.text.ParseException
 import java.util.{InputMismatchException, Scanner}
 import scala.io.StdIn
 
-class TUIView(state: Controller) extends GameUI, Observer {
-  state.add(this)
+class TUIView(controller: Controller) extends GameUI, Observer {
+  controller.add(this)
 
   override def run(): Unit = inputLoop()
 
   def inputLoop(): Unit = {
-    println(state.field.display)
-    while !state.finished do { // TODO: mit rekursion testbar machen
-      print(s"${state.currentPlayer} > ")
-      val input = waitForInput()
+    println(controller.field.display)
+    while !controller.finished do { // TODO: mit rekursion testbar machen
+      print(s"${controller.currentPlayer} > ")
+      val input = readInput()
       input match {
-        case Some((row, col)) => state.put(row, col)
+        case Some((row, col)) => controller.put(row, col)
         case None => println("Invalid input please try again")
       }
     }
   }
 
   // TODO: testen
-  def waitForInput(): Option[(Int, Int)] = {
+  def readInput(): Option[(Int, Int)] = {
     try {
       val input = StdIn.readLine()
       val scanner = new Scanner(input)
@@ -34,7 +34,7 @@ class TUIView(state: Controller) extends GameUI, Observer {
       scanner.close()
 
       values match {
-        case (row: Int, col: Int) if row < state.field.size => Some((row, col))
+        case (row: Int, col: Int) if row < controller.field.size => Some((row, col))
         case _ => None
       }
     } catch {
@@ -43,7 +43,7 @@ class TUIView(state: Controller) extends GameUI, Observer {
   }
 
   override def update(e: Event): Unit = e match {
-    case Placed => println(state.field.display)
+    case Placed => println(controller.field.display)
     case AlreadyPlacedError => println("You can't replace other stones")
     case GameDone =>
   }
