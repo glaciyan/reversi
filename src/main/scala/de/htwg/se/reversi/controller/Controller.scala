@@ -6,7 +6,7 @@ import de.htwg.se.reversi.util.Event.{AlreadyPlacedError, GameDone, Placed}
 import de.htwg.se.reversi.util.Observable
 
 // TODO: testen
-class Controller(var field: Field, var currentPlayer: Stone, var finished: Boolean) extends Observable {
+class Controller(var field: Field, var currentPlayer: Stone, var finished: Boolean = false) extends Observable {
   def put(row: Int, col: Int) = {
     field.getStone(row, col) match {
       case Nothing =>
