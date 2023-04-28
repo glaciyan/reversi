@@ -7,7 +7,7 @@ import de.htwg.se.reversi.util.Observable
 
 // TODO: testen
 class Controller(var field: Field, var currentPlayer: Stone, var finished: Boolean = false) extends Observable {
-  def put(row: Int, col: Int) = {
+  def put(row: Int, col: Int): Unit = {
     field.getStone(row, col) match {
       case Nothing =>
         field = field.put(row, col, currentPlayer)
