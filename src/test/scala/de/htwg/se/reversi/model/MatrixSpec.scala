@@ -39,6 +39,10 @@ class MatrixSpec extends AnyWordSpec {
         matrix.cell(0, 0) should be("Q")
         BMatrix.cell(0, 0) should be("B")
       }
+      "have putCell work" in {
+        val putMatrix = matrix.putCell(0,0, "A")
+        putMatrix.cell(0,0) should be ("A")
+      }
     }
   }
 }
