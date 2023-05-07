@@ -30,5 +30,7 @@ jobs:
       - name: Run Tests
         run: sbt clean coverage test
       - name: Upload Coverage Report
-        run: sbt coverageReport coveralls
+      - run: sbt coverageReport coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       
