@@ -47,6 +47,7 @@ class ControllerSpec extends AnyWordSpec {
         val controller = Controller(sampleField, Stone.Nothing)
         controller.put(0, 0)
         controller.put(0, 0)
+        controller.put(0, 0)
         controller.currentPlayer should be(Stone.White)
       }
     }
