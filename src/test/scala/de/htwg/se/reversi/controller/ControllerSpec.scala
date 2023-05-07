@@ -46,7 +46,8 @@ class ControllerSpec extends AnyWordSpec {
       "handle already placed stones" in {
         val controller = Controller(sampleField, Stone.Nothing)
         controller.put(0, 0)
-        controller.put(0, 0)
+        controller.put(1, 0)
+        controller.put(2, 0)
         controller.currentPlayer should be(Stone.White)
       }
     }
