@@ -31,7 +31,7 @@ class FieldSpec extends AnyWordSpec {
           playingField.row(3) should be(s"$e$e$e$B$B$e$e$e")
         }
 
-        "be able to ge ta single stone" in {
+        "be able to get a single stone" in {
           playingField.getStone(0, 4) should be(White)
         }
       }
