@@ -26,7 +26,7 @@ class ControllerSpec extends AnyWordSpec {
         val controller = Controller(sampleField, Stone.White)
         val observer = TestObserver(Placed)
         controller.add(observer)
-        controller.listeners.size should be(1)
+        controller.listenerCount should be(1)
 
         controller.notifyObservers(AlreadyPlacedError)
         observer.status should be(AlreadyPlacedError)
