@@ -50,7 +50,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
     case GameDone =>
   }
 
-  def displayField(field: Field) = (0 until field.size).map(field.row).mkString(field.eol)
+  def displayField(field: Field): String = (0 until field.size).map(field.row).mkString(field.eol)
 }
 
 // $COVERAGE-ON$
