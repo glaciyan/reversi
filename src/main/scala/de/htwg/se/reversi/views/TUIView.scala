@@ -1,6 +1,8 @@
+// $COVERAGE-OFF$Disabling highlighting by default until a workaround for https://issues.scala-lang.org/browse/SI-8596 is found
 package de.htwg.se.reversi.views
 
 import de.htwg.se.reversi.controller.Controller
+import de.htwg.se.reversi.model.Field
 import de.htwg.se.reversi.util.Event.{AlreadyPlacedError, GameDone, Placed}
 import de.htwg.se.reversi.util.{Event, Observer}
 
@@ -14,7 +16,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
   override def run(): Unit = inputLoop()
 
   def inputLoop(): Unit = {
-    println(controller.field.display)
+    println(displayField(controller.field))
     while !controller.finished do { // TODO: mit rekursion testbar machen
       print(s"${controller.currentPlayer} > ")
       val input = readInput()
@@ -43,8 +45,12 @@ class TUIView(controller: Controller) extends GameUI, Observer {
   }
 
   override def update(e: Event): Unit = e match {
-    case Placed => println(controller.field.display)
+    case Placed => println(displayField(controller.field))
     case AlreadyPlacedError => println("You can't replace other stones")
     case GameDone =>
   }
+
+  def displayField(field: Field) = (0 until field.size).map(field.row).mkString(field.eol)
 }
+
+// $COVERAGE-ON$
