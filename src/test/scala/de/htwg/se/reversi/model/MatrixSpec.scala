@@ -34,7 +34,7 @@ class MatrixSpec extends AnyWordSpec {
         matrix.cell(3, 2) should be("Q")
         returned.cell(3, 2) should be("H")
       }
-      "be fillable" in {
+      "be have fill" in {
         val BMatrix = matrix.fill("B")
         matrix.cell(0, 0) should be("Q")
         BMatrix.cell(0, 0) should be("B")
