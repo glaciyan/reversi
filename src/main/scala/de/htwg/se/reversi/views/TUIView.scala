@@ -17,7 +17,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
   private def inputLoop(): Unit = {
     println(displayField(controller.field))
     while !controller.finished do {
-      print(s"${controller.currentPlayer} > ")
+      print(s"${controller.currentPlayer.renderText()} > ")
       val input = readInput()
       input match {
         case Some((row, col)) => controller.put(row, col)
@@ -51,7 +51,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
 
   private def displayField(field: Field): String = (0 until field.size).map(fieldRow(field, _)).mkString(field.eol)
 
-  private def fieldRow(field: Field, row: Int): String = field.row(row).mkString("")
+  private def fieldRow(field: Field, row: Int): String = field.row(row).map(_.renderText()).mkString("")
 }
 
 // $COVERAGE-ON$
