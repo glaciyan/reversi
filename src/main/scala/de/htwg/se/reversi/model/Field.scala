@@ -1,6 +1,8 @@
 package de.htwg.se.reversi.model
 
-case class Field(m: Matrix[Stone] = new Matrix(8, Stone.Nothing)) {
+import de.htwg.se.reversi.model.stone.{Stone, WhiteStone}
+
+case class Field(m: Matrix[Stone] = new Matrix(8, Stone(WhiteStone))) {
   def size: Int = m.size
 
   val eol: String = sys.props("line.separator")

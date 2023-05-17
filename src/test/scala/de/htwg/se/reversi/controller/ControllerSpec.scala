@@ -1,6 +1,7 @@
 package de.htwg.se.reversi.controller
 
-import de.htwg.se.reversi.model.{Field, Stone}
+import de.htwg.se.reversi.model.Field
+import de.htwg.se.reversi.model.stone.{BlackStone, NoStone, Stone, StoneState, WhiteStone}
 import de.htwg.se.reversi.util.Event.{AlreadyPlacedError, Placed}
 import de.htwg.se.reversi.util.{Event, Observer}
 import de.htwg.se.reversi.views.TUIView
@@ -8,7 +9,7 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
 class ControllerSpec extends AnyWordSpec {
-  val sampleField: Field = Field().put(3, 3, Stone.Black).put(3, 4, Stone.White).put(4, 3, Stone.White).put(4, 4, Stone.Black)
+  val sampleField: Field = Field().put(3, 3, Stone(BlackStone)).put(3, 4, Stone(WhiteStone)).put(4, 3, Stone(WhiteStone)).put(4, 4, Stone(BlackStone))
 
   class TestObserver(var status: Event) extends Observer {
     override def update(e: Event): Unit = status = e
@@ -17,13 +18,13 @@ class ControllerSpec extends AnyWordSpec {
   "A Controller" when {
     "created" should {
       "have a stone put" in {
-        val controller = Controller(sampleField, Stone.White)
+        val controller = Controller(sampleField, WhiteStone)
         controller.put(0, 0)
-        controller.field.getStone(0, 0) should be(Stone.White)
+        controller.field.getStone(0, 0).state should be(WhiteStone)
       }
       "add,remove and notify observers" in {
 
-        val controller = Controller(sampleField, Stone.White)
+        val controller = Controller(sampleField, WhiteStone)
         val observer = TestObserver(Placed)
         controller.add(observer)
         controller.listeners.size should be(1)
@@ -38,17 +39,17 @@ class ControllerSpec extends AnyWordSpec {
     }
     "with weird stating values" should {
       "have a good handle" in {
-        val controller = Controller(sampleField, Stone.Nothing)
+        val controller = Controller(sampleField, NoStone)
         // TODO: add observer
         controller.put(0, 0)
-        controller.currentPlayer should be(Stone.White)
+        controller.currentPlayer should be(WhiteStone)
       }
       "handle already placed stones" in {
-        val controller = Controller(sampleField, Stone.Nothing)
+        val controller = Controller(sampleField, NoStone)
         controller.put(0, 0)
         controller.put(1, 0)
         controller.put(2, 0)
-        controller.currentPlayer should be(Stone.White)
+        controller.currentPlayer should be(WhiteStone)
       }
     }
   }
