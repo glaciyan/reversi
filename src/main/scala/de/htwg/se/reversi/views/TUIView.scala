@@ -1,6 +1,7 @@
 package de.htwg.se.reversi.views
 
 import de.htwg.se.reversi.controller.Controller
+import de.htwg.se.reversi.model.Field
 import de.htwg.se.reversi.util.Event.{AlreadyPlacedError, GameDone, Placed}
 import de.htwg.se.reversi.util.{Event, Observer}
 
@@ -48,7 +49,9 @@ class TUIView(controller: Controller) extends GameUI, Observer {
     case GameDone =>
   }
 
-  def displayField(field: Field): String = (0 until field.size).map(field.row).mkString(field.eol)
+  def displayField(field: Field): String = (0 until field.size).map(fieldRow(field, _)).mkString(field.eol)
+
+  def fieldRow(field: Field, row: Int) = field.row(row).mkString("")
 }
 
 // $COVERAGE-ON$
