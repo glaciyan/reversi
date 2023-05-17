@@ -1,3 +1,4 @@
+// $COVERAGE-OFF$Disabling highlighting by default until a workaround for https://issues.scala-lang.org/browse/SI-8596 is found
 package de.htwg.se.reversi
 
 import de.htwg.se.reversi.controller.Controller
@@ -12,3 +13,5 @@ import scala.io.StdIn.{readLine, readf, readf3}
   val state = Controller(field, WhiteStone, false)
   val game: GameUI = TUIView(state) // Template Pattern
   game.run()
+
+// $COVERAGE-ON$

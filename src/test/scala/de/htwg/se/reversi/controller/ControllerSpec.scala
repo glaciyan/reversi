@@ -27,7 +27,7 @@ class ControllerSpec extends AnyWordSpec {
         val controller = Controller(sampleField, WhiteStone)
         val observer = TestObserver(Placed)
         controller.add(observer)
-        controller.listeners.size should be(1)
+        controller.listenerCount should be(1)
 
         controller.notifyObservers(AlreadyPlacedError)
         observer.status should be(AlreadyPlacedError)
@@ -35,6 +35,16 @@ class ControllerSpec extends AnyWordSpec {
         controller.remove(observer)
         controller.notifyObservers(Placed)
         observer.status should be(AlreadyPlacedError)
+      }
+    }
+    "when a stone is already placed" should {
+      "report" in {
+        val controller = Controller(sampleField, Stone.White)
+        val observer = TestObserver(Placed)
+        controller.add(observer)
+
+        controller.put(3,3)
+        observer.status should be (AlreadyPlacedError)
       }
     }
     "with weird stating values" should {

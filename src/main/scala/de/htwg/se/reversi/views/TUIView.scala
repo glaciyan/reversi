@@ -14,7 +14,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
   override def run(): Unit = inputLoop()
 
   def inputLoop(): Unit = {
-    println(controller.field.display)
+    println(displayField(controller.field))
     while !controller.finished do {
       print(s"${controller.currentPlayer} > ")
       val input = readInput()
@@ -25,6 +25,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
     }
   }
 
+  // TODO: testen
   def readInput(): Option[(Int, Int)] = {
     try {
       val input = StdIn.readLine()
@@ -42,8 +43,12 @@ class TUIView(controller: Controller) extends GameUI, Observer {
   }
 
   override def update(e: Event): Unit = e match {
-    case Placed => println(controller.field.display)
+    case Placed => println(displayField(controller.field))
     case AlreadyPlacedError => println("You can't replace other stones")
     case GameDone =>
   }
+
+  def displayField(field: Field): String = (0 until field.size).map(field.row).mkString(field.eol)
 }
+
+// $COVERAGE-ON$

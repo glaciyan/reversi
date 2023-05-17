@@ -16,6 +16,9 @@ class FieldSpec extends AnyWordSpec {
       "have an empty row" in {
         emptyField.row(0) should be(s"$e$e$e$e$e$e$e$e")
       }
+      "correct size" in {
+        emptyField.size should be (8)
+      }
     }
     "without padding and stones" should {
       "with some stones" should {
@@ -31,7 +34,7 @@ class FieldSpec extends AnyWordSpec {
           playingField.row(3) should be(s"$e$e$e$B$B$e$e$e")
         }
 
-        "be able to ge ta single stone" in {
+        "be able to get a single stone" in {
           playingField.getStone(0, 4) should be(White)
         }
       }
