@@ -39,7 +39,7 @@ class ControllerSpec extends AnyWordSpec {
     }
     "when a stone is already placed" should {
       "report" in {
-        val controller = Controller(sampleField, Stone.White)
+        val controller = Controller(sampleField, WhiteStone)
         val observer = TestObserver(Placed)
         controller.add(observer)
 
