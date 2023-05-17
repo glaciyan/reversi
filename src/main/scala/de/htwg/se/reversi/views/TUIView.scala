@@ -14,7 +14,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
 
   override def run(): Unit = inputLoop()
 
-  def inputLoop(): Unit = {
+  private def inputLoop(): Unit = {
     println(displayField(controller.field))
     while !controller.finished do {
       print(s"${controller.currentPlayer} > ")
@@ -27,7 +27,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
   }
 
   // TODO: testen
-  def readInput(): Option[(Int, Int)] = {
+  private def readInput(): Option[(Int, Int)] = {
     try {
       val input = StdIn.readLine()
       val scanner = new Scanner(input)
@@ -49,9 +49,9 @@ class TUIView(controller: Controller) extends GameUI, Observer {
     case GameDone =>
   }
 
-  def displayField(field: Field): String = (0 until field.size).map(fieldRow(field, _)).mkString(field.eol)
+  private def displayField(field: Field): String = (0 until field.size).map(fieldRow(field, _)).mkString(field.eol)
 
-  def fieldRow(field: Field, row: Int) = field.row(row).mkString("")
+  private def fieldRow(field: Field, row: Int): String = field.row(row).mkString("")
 }
 
 // $COVERAGE-ON$
