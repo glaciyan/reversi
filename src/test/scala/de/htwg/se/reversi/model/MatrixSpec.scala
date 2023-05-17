@@ -17,7 +17,7 @@ class MatrixSpec extends AnyWordSpec {
       }
     }
     "created" should {
-      val vecVec = Vector.tabulate(6, 6) { (row, col) => "Q" }
+      val vecVec = Vector.tabulate(6, 6) { (_, _) => "Q" }
       val matrix = Matrix(vecVec)
       "be constructed properly" in {
         matrix.row(0) should be(vecVec(0))
@@ -34,7 +34,7 @@ class MatrixSpec extends AnyWordSpec {
         matrix.cell(3, 2) should be("Q")
         returned.cell(3, 2) should be("H")
       }
-      "be fillable" in {
+      "be have fill" in {
         val BMatrix = matrix.fill("B")
         matrix.cell(0, 0) should be("Q")
         BMatrix.cell(0, 0) should be("B")
