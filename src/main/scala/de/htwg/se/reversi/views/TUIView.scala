@@ -15,7 +15,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
 
   def inputLoop(): Unit = {
     println(controller.field.display)
-    while !controller.finished do { // TODO: mit rekursion testbar machen
+    while !controller.finished do {
       print(s"${controller.currentPlayer} > ")
       val input = readInput()
       input match {
@@ -25,7 +25,6 @@ class TUIView(controller: Controller) extends GameUI, Observer {
     }
   }
 
-  // TODO: testen
   def readInput(): Option[(Int, Int)] = {
     try {
       val input = StdIn.readLine()
