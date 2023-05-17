@@ -17,7 +17,7 @@ class MatrixSpec extends AnyWordSpec {
       }
     }
     "created" should {
-      val vecVec = Vector.tabulate(6, 6) { (row, col) => "Q" }
+      val vecVec = Vector.tabulate(6, 6) { (_, _) => "Q" }
       val matrix = Matrix(vecVec)
       "be constructed properly" in {
         matrix.row(0) should be(vecVec(0))
