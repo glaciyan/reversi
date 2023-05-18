@@ -62,5 +62,20 @@ class ControllerSpec extends AnyWordSpec {
         controller.currentPlayer should be(WhiteStone)
       }
     }
+    "when playing a game" should {
+      "undo a move and restore the undid" in {
+        val controller = Controller(sampleField, WhiteStone)
+        controller.put(0,0)
+        controller.put(0,1)
+        controller.field.getStone(0,0).state should be (WhiteStone)
+        controller.field.getStone(0,1).state should be (BlackStone)
+
+        val oldState = controller.undo()
+        controller.field.getStone(0,1).state should be (NoStone)
+
+        val copyController = new Controller(oldState)
+        copyController.field.getStone(0,1).state should be (BlackStone)
+      }
+    }
   }
 }
