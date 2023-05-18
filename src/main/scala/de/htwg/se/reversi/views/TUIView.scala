@@ -26,7 +26,6 @@ class TUIView(controller: Controller) extends GameUI, Observer {
     }
   }
 
-  // TODO: testen
   private def readInput(): Option[(Int, Int)] = {
     try {
       val input = StdIn.readLine()
