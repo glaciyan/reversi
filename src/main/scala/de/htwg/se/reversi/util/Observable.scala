@@ -8,5 +8,5 @@ trait Observable {
 
   def remove(o: Observer): Unit = listeners = listeners.filterNot(_ == o)
 
-  def notifyObservers(e: Event): Unit = listeners.foreach(_.update(e))
+  def notifyObservers(e: PutEvent): Unit = listeners.foreach(_.update(e))
 }

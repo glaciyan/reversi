@@ -2,8 +2,8 @@ package de.htwg.se.reversi.controller
 
 import de.htwg.se.reversi.model.Field
 import de.htwg.se.reversi.model.stone.{BlackStone, NoStone, Stone, StoneState, WhiteStone}
-import de.htwg.se.reversi.util.Event.{AlreadyPlacedError, Placed}
-import de.htwg.se.reversi.util.{Event, Observer}
+import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, Placed}
+import de.htwg.se.reversi.util.{PutEvent, Observer}
 import de.htwg.se.reversi.views.TUIView
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
@@ -11,8 +11,8 @@ import org.scalatest.wordspec.AnyWordSpec
 class ControllerSpec extends AnyWordSpec {
   val sampleField: Field = Field().put(3, 3, Stone(BlackStone)).put(3, 4, Stone(WhiteStone)).put(4, 3, Stone(WhiteStone)).put(4, 4, Stone(BlackStone))
 
-  class TestObserver(var status: Event) extends Observer {
-    override def update(e: Event): Unit = status = e
+  class TestObserver(var status: PutEvent) extends Observer {
+    override def update(e: PutEvent): Unit = status = e
   }
 
   "A Controller" when {

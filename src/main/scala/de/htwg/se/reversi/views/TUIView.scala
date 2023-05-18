@@ -2,8 +2,8 @@ package de.htwg.se.reversi.views
 
 import de.htwg.se.reversi.controller.Controller
 import de.htwg.se.reversi.model.Field
-import de.htwg.se.reversi.util.Event.{AlreadyPlacedError, GameDone, Placed}
-import de.htwg.se.reversi.util.{Event, Observer}
+import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, GameDone, Placed}
+import de.htwg.se.reversi.util.{PutEvent, Observer}
 
 import java.text.ParseException
 import java.util.{InputMismatchException, Scanner}
@@ -43,7 +43,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
     }
   }
 
-  override def update(e: Event): Unit = e match {
+  override def update(e: PutEvent): Unit = e match {
     case Placed => println(displayField(controller.field))
     case AlreadyPlacedError => println("You can't replace other stones")
     case GameDone =>

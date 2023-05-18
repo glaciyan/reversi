@@ -1,6 +1,6 @@
 package de.htwg.se.reversi.util
 
-enum Event {
+enum PutEvent {
   case Placed
   case AlreadyPlacedError
   case GameDone
