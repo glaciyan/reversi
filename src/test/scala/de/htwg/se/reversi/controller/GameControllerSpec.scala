@@ -8,23 +8,23 @@ import de.htwg.se.reversi.views.TUIView
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
-class ControllerSpec extends AnyWordSpec {
+class GameControllerSpec extends AnyWordSpec {
   val sampleField: Field = Field().put(3, 3, Stone(BlackStone)).put(3, 4, Stone(WhiteStone)).put(4, 3, Stone(WhiteStone)).put(4, 4, Stone(BlackStone))
 
   class TestObserver(var status: PutEvent) extends Observer {
     override def update(e: PutEvent): Unit = status = e
   }
 
-  "A Controller" when {
+  "A GameController" when {
     "created" should {
       "have a stone put" in {
-        val controller = Controller(sampleField, WhiteStone)
+        val controller = GameController(sampleField, WhiteStone)
         controller.put(0, 0)
         controller.field.getStone(0, 0).state should be(WhiteStone)
       }
       "add,remove and notify observers" in {
 
-        val controller = Controller(sampleField, WhiteStone)
+        val controller = GameController(sampleField, WhiteStone)
         val observer = TestObserver(Placed)
         controller.add(observer)
         controller.listenerCount should be(1)
@@ -39,7 +39,7 @@ class ControllerSpec extends AnyWordSpec {
     }
     "when a stone is already placed" should {
       "report" in {
-        val controller = Controller(sampleField, WhiteStone)
+        val controller = GameController(sampleField, WhiteStone)
         val observer = TestObserver(Placed)
         controller.add(observer)
 
@@ -49,13 +49,13 @@ class ControllerSpec extends AnyWordSpec {
     }
     "with weird stating values" should {
       "have a good handle" in {
-        val controller = Controller(sampleField, NoStone)
+        val controller = GameController(sampleField, NoStone)
         // TODO: add observer
         controller.put(0, 0)
         controller.currentPlayer should be(WhiteStone)
       }
       "handle already placed stones" in {
-        val controller = Controller(sampleField, NoStone)
+        val controller = GameController(sampleField, NoStone)
         controller.put(0, 0)
         controller.put(1, 0)
         controller.put(2, 0)
@@ -64,7 +64,7 @@ class ControllerSpec extends AnyWordSpec {
     }
     "when playing a game" should {
       "undo a move and restore the undid" in {
-        val controller = Controller(sampleField, WhiteStone)
+        val controller = GameController(sampleField, WhiteStone)
         controller.put(0,0)
         controller.put(0,1)
         controller.field.getStone(0,0).state should be (WhiteStone)
@@ -73,7 +73,7 @@ class ControllerSpec extends AnyWordSpec {
         val oldState = controller.undo()
         controller.field.getStone(0,1).state should be (NoStone)
 
-        val copyController = new Controller(oldState)
+        val copyController = new GameController(oldState)
         copyController.field.getStone(0,1).state should be (BlackStone)
       }
     }
