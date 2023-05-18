@@ -1,28 +1,31 @@
 package de.htwg.se.reversi.controller
 
-import de.htwg.se.reversi.model.Field
+import de.htwg.se.reversi.model.{Field, GameState}
 import de.htwg.se.reversi.model.stone.{BlackStone, NoStone, Stone, StoneState, WhiteStone}
-import de.htwg.se.reversi.util.Event.{AlreadyPlacedError, GameDone, Placed}
+import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, GameDone, Placed}
 import de.htwg.se.reversi.util.Observable
 
-class Controller(var field: Field, var currentPlayer: StoneState, var finished: Boolean = false) extends Observable {
+import scala.collection.mutable
+
+class Controller(private var gameState: GameState, var finished: Boolean = false) extends Observable {
+  private val history: mutable.Stack[GameState] = mutable.Stack()
+
+  def this(field: Field, startingPlayer: StoneState) = this(GameState(field, startingPlayer), false)
+
   def put(row: Int, col: Int): Unit = {
-    field.getStone(row, col).state match {
-      case NoStone =>
-        field = field.put(row, col, Stone(currentPlayer))
-        currentPlayer = nextPlayer
-//        if gameFinished then
-//          finished = true
-//          notifyObservers(GameDone)
-        notifyObservers(Placed)
-      case _: StoneState => notifyObservers(AlreadyPlacedError)
-    }
-
+    history.push(gameState)
+    val (event, state) = gameState.put(row, col)
+    gameState = state
+    notifyObservers(event)
   }
 
-  private def nextPlayer = currentPlayer match {
-    case WhiteStone => BlackStone
-    case BlackStone => WhiteStone
-    case _ => WhiteStone
+  def undo(): GameState = {
+    val oldState = gameState
+    gameState = history.pop()
+    oldState
   }
+
+  def field: Field = gameState.field
+
+  def currentPlayer: StoneState = gameState.currentPlayer
 }
