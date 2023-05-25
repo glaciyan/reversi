@@ -21,6 +21,7 @@ class GameController(private var gameState: GameState, var finished: Boolean = f
   def undo(): GameState = {
     val oldState = gameState
     gameState = history.pop()
+    notifyObservers(Placed)
     oldState
   }
 
