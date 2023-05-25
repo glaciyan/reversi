@@ -7,16 +7,15 @@ import de.htwg.se.reversi.util.Observable
 
 import scala.collection.mutable
 
-class GameController(private var gameState: GameState, var finished: Boolean = false) extends Observable, Controller {
+class GameController(private var gameState: GameState, var finished: Boolean = false) extends Controller {
   private val history: mutable.Stack[GameState] = mutable.Stack()
 
   def this(field: Field, startingPlayer: StoneState) = this(GameState(field, startingPlayer), false)
 
   def put(row: Int, col: Int): Unit = {
     history.push(gameState)
-    val (event, state) = gameState.put(row, col)
-    gameState = state
-    notifyObservers(event)
+    gameState = gameState.put(row, col)
+    notifyObservers(Placed)
   }
 
   def undo(): GameState = {

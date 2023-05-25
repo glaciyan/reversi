@@ -39,7 +39,7 @@ class GameControllerSpec extends AnyWordSpec {
     }
     "when a stone is already placed" should {
       "report" in {
-        val controller = GameController(sampleField, WhiteStone)
+        val controller = CheckedGameController(GameController(sampleField, WhiteStone))
         val observer = TestObserver(Placed)
         controller.add(observer)
 
@@ -64,7 +64,7 @@ class GameControllerSpec extends AnyWordSpec {
     }
     "when playing a game" should {
       "undo a move and restore the undid" in {
-        val controller = GameController(sampleField, WhiteStone)
+        val controller = CheckedGameController(GameController(sampleField, WhiteStone))
         controller.put(0,0)
         controller.put(0,1)
         controller.field.getStone(0,0).state should be (WhiteStone)
