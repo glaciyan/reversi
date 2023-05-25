@@ -7,7 +7,10 @@ import de.htwg.se.reversi.util.PutEvent.AlreadyPlacedError
 class CheckedGameController(gameController: GameController) extends Controller {
   override def put(row: Int, col: Int): Unit = {
     // logic to check
-    if (field.getStone(row, col).state != NoStone) {
+    if field.getStone(row, col) match
+      case Some(value) => value.state != NoStone
+      case None => false
+    then {
       notifyObservers(AlreadyPlacedError)
       return
     }
