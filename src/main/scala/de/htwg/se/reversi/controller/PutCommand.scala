@@ -15,9 +15,9 @@ case class PutCommand(controller: Controller, row: Int, col: Int) extends Comman
     controller.gameState = controller.gameState.put(row, col)
   }
 
-  override def undoCommand(): Unit = {
+  override def undoCommand(): Try[Unit] = {
     (replaced, whoPlaced) match {
-      case (Some(replaced), Some(who)) => controller.gameState = controller.gameState.put(row, col, replaced.state, who)
-      case _ =>
+      case (Some(replaced), Some(who)) => Success(controller.gameState = controller.gameState.put(row, col, replaced.state, who))
+      case _ => Failure(new IllegalStateException("doCommand has to be called first"))
     }
   }
