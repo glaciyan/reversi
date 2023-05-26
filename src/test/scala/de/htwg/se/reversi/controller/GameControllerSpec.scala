@@ -20,7 +20,17 @@ class GameControllerSpec extends AnyWordSpec {
       "have a stone put" in {
         val controller = GameController(sampleField, WhiteStone)
         controller.put(0, 0)
-        controller.field.getStone(0, 0).state should be(WhiteStone)
+        val stone = controller.field.getStone(0, 0)
+        assert(stone.isDefined)
+        stone.get.state should be(WhiteStone)
+
+      }
+      "have no stone when getting out of bounds" in {
+        val controller = GameController(sampleField, WhiteStone)
+        controller.put(0, 0)
+
+        val wrongStone = controller.field.getStone(100, 100)
+        wrongStone should be(None)
       }
       "add,remove and notify observers" in {
 
@@ -43,8 +53,8 @@ class GameControllerSpec extends AnyWordSpec {
         val observer = TestObserver(Placed)
         controller.add(observer)
 
-        controller.put(3,3)
-        observer.status should be (AlreadyPlacedError)
+        controller.put(3, 3)
+        observer.status should be(AlreadyPlacedError)
       }
     }
     "with weird stating values" should {
@@ -65,16 +75,16 @@ class GameControllerSpec extends AnyWordSpec {
     "when playing a game" should {
       "undo a move and restore the undid" in {
         val controller = CheckedGameController(GameController(sampleField, WhiteStone))
-        controller.put(0,0)
-        controller.put(0,1)
-        controller.field.getStone(0,0).state should be (WhiteStone)
-        controller.field.getStone(0,1).state should be (BlackStone)
+        controller.put(0, 0)
+        controller.put(0, 1)
+        controller.field.getStone(0, 0).get.state should be(WhiteStone)
+        controller.field.getStone(0, 1).get.state should be(BlackStone)
 
         val oldState = controller.undo()
-        controller.field.getStone(0,1).state should be (NoStone)
+        controller.field.getStone(0, 1).get.state should be(NoStone)
 
         val copyController = new GameController(oldState)
-        copyController.field.getStone(0,1).state should be (BlackStone)
+        copyController.field.getStone(0, 1).get.state should be(BlackStone)
       }
     }
   }

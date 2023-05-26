@@ -13,7 +13,7 @@ class MatrixSpec extends AnyWordSpec {
       }
       "have the correct element" in {
         val matrix = new Matrix[String](10, "ABC")
-        matrix.cell(3, 4) should be("ABC")
+        matrix.cell(3, 4) should be(Some("ABC"))
       }
     }
     "created" should {
@@ -27,21 +27,21 @@ class MatrixSpec extends AnyWordSpec {
         matrix.row(0).size should be(6)
       }
       "have the correct element" in {
-        matrix.cell(5, 5) should be("Q")
+        matrix.cell(5, 5) should be(Some("Q"))
       }
       "put cells and be immutable" in {
         val returned = matrix.putCell(3, 2, "H")
-        matrix.cell(3, 2) should be("Q")
-        returned.cell(3, 2) should be("H")
+        matrix.cell(3, 2) should be(Some("Q"))
+        returned.cell(3, 2) should be(Some("H"))
       }
       "be have fill" in {
         val BMatrix = matrix.fill("B")
-        matrix.cell(0, 0) should be("Q")
-        BMatrix.cell(0, 0) should be("B")
+        matrix.cell(0, 0) should be(Some("Q"))
+        BMatrix.cell(0, 0) should be(Some("B"))
       }
       "have putCell work" in {
         val putMatrix = matrix.putCell(0,0, "A")
-        putMatrix.cell(0,0) should be ("A")
+        putMatrix.cell(0,0) should be (Some("A"))
       }
     }
   }
