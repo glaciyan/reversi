@@ -81,9 +81,10 @@ class GameControllerSpec extends AnyWordSpec {
         controller.field.getStone(0, 1).get.state should be(BlackStone)
 
         val oldState = controller.undo()
+        oldState should not be None
         controller.field.getStone(0, 1).get.state should be(NoStone)
 
-        val copyController = new GameController(oldState)
+        val copyController = new GameController(oldState.get)
         copyController.field.getStone(0, 1).get.state should be(BlackStone)
       }
     }
