@@ -10,7 +10,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.{Failure, Success}
 
-class GameControllerSpec extends AnyWordSpec {
+class ControllerSpec extends AnyWordSpec {
   val sampleField: Field = Field().put(3, 3, Stone(BlackStone)).put(3, 4, Stone(WhiteStone)).put(4, 3, Stone(WhiteStone)).put(4, 4, Stone(BlackStone))
 
   class TestObserver(var status: PutEvent) extends Observer {
@@ -20,7 +20,7 @@ class GameControllerSpec extends AnyWordSpec {
   "A GameController" when {
     "created" should {
       "have a stone put" in {
-        val controller = GameController(sampleField, WhiteStone)
+        val controller = Controller(sampleField, WhiteStone)
         controller.put(0, 0)
         val stone = controller.field.getStone(0, 0)
         assert(stone.isDefined)
@@ -28,7 +28,7 @@ class GameControllerSpec extends AnyWordSpec {
 
       }
       "have no stone when getting out of bounds" in {
-        val controller = GameController(sampleField, WhiteStone)
+        val controller = Controller(sampleField, WhiteStone)
         controller.put(0, 0)
 
         val wrongStone = controller.field.getStone(100, 100)
@@ -36,7 +36,7 @@ class GameControllerSpec extends AnyWordSpec {
       }
       "add,remove and notify observers" in {
 
-        val controller = GameController(sampleField, WhiteStone)
+        val controller = Controller(sampleField, WhiteStone)
         val observer = TestObserver(Placed)
         controller.add(observer)
         controller.listenerCount should be(1)
@@ -51,7 +51,7 @@ class GameControllerSpec extends AnyWordSpec {
     }
     "when a stone is already placed" should {
       "report" in {
-        val controller = CheckedGameController(GameController(sampleField, WhiteStone))
+        val controller = Controller(sampleField, WhiteStone)
         val observer = TestObserver(Placed)
         controller.add(observer)
 
@@ -61,13 +61,13 @@ class GameControllerSpec extends AnyWordSpec {
     }
     "with weird stating values" should {
       "have a good handle" in {
-        val controller = GameController(sampleField, NoStone)
+        val controller = Controller(sampleField, NoStone)
         // TODO: add observer
         controller.put(0, 0)
         controller.currentPlayer should be(WhiteStone)
       }
       "handle already placed stones" in {
-        val controller = GameController(sampleField, NoStone)
+        val controller = Controller(sampleField, NoStone)
         controller.put(0, 0)
         controller.put(1, 0)
         controller.put(2, 0)
@@ -76,7 +76,7 @@ class GameControllerSpec extends AnyWordSpec {
     }
     "when playing a game" should {
       "undo a move and restore the undid" in {
-        val controller = CheckedGameController(GameController(sampleField, WhiteStone))
+        val controller = Controller(sampleField, WhiteStone)
         controller.put(0, 0)
         controller.put(0, 1)
         controller.field.getStone(0, 0).get.state should be(WhiteStone)
@@ -86,11 +86,11 @@ class GameControllerSpec extends AnyWordSpec {
         oldState should not be Failure
         controller.field.getStone(0, 1).get.state should be(NoStone)
 
-        val copyController = new GameController(oldState.get)
+        val copyController = new Controller(oldState.get)
         copyController.field.getStone(0, 1).get.state should be(BlackStone)
       }
       "fail on empty history" in {
-        val controller = CheckedGameController(GameController(sampleField, WhiteStone))
+        val controller = Controller(sampleField, WhiteStone)
         val oldState = controller.undo()
         oldState match
           case Failure(_) =>
