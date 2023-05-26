@@ -22,7 +22,7 @@ class Controller(var gameState: GameState, var finished: Boolean = false) extend
       return
     }
 
-    val command = PutCommand(this, row, col);
+    val command = PutCommand(this, row, col)
     command.doCommand()
     history.push(command)
     notifyObservers(Placed)
