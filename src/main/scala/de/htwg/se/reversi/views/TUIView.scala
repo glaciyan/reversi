@@ -23,7 +23,11 @@ class TUIView(controller: Controller) extends GameUI, Observer {
       val input = readInput()
       input match {
         case Success((row: Int, col: Int)) => controller.put(row, col)
-        case Success(InputCommand.Undo) => controller.undo()
+        case Success(InputCommand.Undo) =>
+          controller.undo() match {
+            case Failure(_) => println("Invalid undo put some stones down first")
+            case _ =>
+          }
         case Failure(_) => println("Invalid input please try again")
       }
     }

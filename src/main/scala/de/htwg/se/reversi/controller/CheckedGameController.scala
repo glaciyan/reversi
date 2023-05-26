@@ -4,6 +4,8 @@ import de.htwg.se.reversi.model.{Field, GameState}
 import de.htwg.se.reversi.model.stone.{NoStone, StoneState}
 import de.htwg.se.reversi.util.PutEvent.AlreadyPlacedError
 
+import scala.util.Try
+
 class CheckedGameController(gameController: GameController) extends Controller {
   override def put(row: Int, col: Int): Unit = {
     // logic to check
@@ -18,7 +20,7 @@ class CheckedGameController(gameController: GameController) extends Controller {
     gameController.put(row, col)
   }
 
-  override def undo(): GameState = gameController.undo()
+  override def undo(): Try[GameState] = gameController.undo()
 
   override def field: Field = gameController.field
 

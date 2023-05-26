@@ -6,6 +6,7 @@ import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, GameDone, Placed}
 import de.htwg.se.reversi.util.Observable
 
 import scala.collection.mutable
+import scala.util.{Failure, Success, Try}
 
 class GameController(private var gameState: GameState, var finished: Boolean = false) extends Controller {
   private val history: mutable.Stack[GameState] = mutable.Stack()
@@ -18,11 +19,12 @@ class GameController(private var gameState: GameState, var finished: Boolean = f
     notifyObservers(Placed)
   }
 
-  def undo(): GameState = {
+  def undo(): Try[GameState] = {
+    if (history.isEmpty) return Failure(new NoSuchElementException())
     val oldState = gameState
     gameState = history.pop()
     notifyObservers(Placed)
-    oldState
+    Success(oldState)
   }
 
   def field: Field = gameState.field
