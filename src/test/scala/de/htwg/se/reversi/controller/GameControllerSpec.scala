@@ -3,10 +3,12 @@ package de.htwg.se.reversi.controller
 import de.htwg.se.reversi.model.Field
 import de.htwg.se.reversi.model.stone.{BlackStone, NoStone, Stone, StoneState, WhiteStone}
 import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, Placed}
-import de.htwg.se.reversi.util.{PutEvent, Observer}
+import de.htwg.se.reversi.util.{Observer, PutEvent}
 import de.htwg.se.reversi.views.TUIView
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.util.{Failure, Success}
 
 class GameControllerSpec extends AnyWordSpec {
   val sampleField: Field = Field().put(3, 3, Stone(BlackStone)).put(3, 4, Stone(WhiteStone)).put(4, 3, Stone(WhiteStone)).put(4, 4, Stone(BlackStone))
@@ -81,11 +83,18 @@ class GameControllerSpec extends AnyWordSpec {
         controller.field.getStone(0, 1).get.state should be(BlackStone)
 
         val oldState = controller.undo()
-        oldState should not be None
+        oldState should not be Failure
         controller.field.getStone(0, 1).get.state should be(NoStone)
 
         val copyController = new GameController(oldState.get)
         copyController.field.getStone(0, 1).get.state should be(BlackStone)
+      }
+      "fail on empty history" in {
+        val controller = CheckedGameController(GameController(sampleField, WhiteStone))
+        val oldState = controller.undo()
+        oldState match
+          case Failure(_) =>
+          case Success(_) => fail()
       }
     }
   }
