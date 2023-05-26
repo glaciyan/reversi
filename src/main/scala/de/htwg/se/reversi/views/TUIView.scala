@@ -1,7 +1,7 @@
 package de.htwg.se.reversi.views
 
-import de.htwg.se.reversi.controller.Controller
-import de.htwg.se.reversi.model.{Field, InputCommand}
+import de.htwg.se.reversi.controller.{Controller, InputCommand}
+import de.htwg.se.reversi.model.Field
 import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, GameDone, Placed}
 import de.htwg.se.reversi.util.{Observer, PutEvent}
 
@@ -33,7 +33,6 @@ class TUIView(controller: Controller) extends GameUI, Observer {
     }
   }
 
-  // TODO: testen
   private def readInput(): Try[(Int, Int) | InputCommand] = {
     try {
       val input = StdIn.readLine()
