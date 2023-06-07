@@ -3,7 +3,7 @@ package de.htwg.se.reversi.model
 import de.htwg.se.reversi.model.Matrix.makeFill
 import java.util.NoSuchElementException
 
-case class Matrix[T](rows: Vector[Vector[T]]) extends Iterable[T] {
+case class Matrix[T](rows: Vector[Vector[T]]) {
 
   def this(size: Int, cell: T) = this(makeFill(size, cell))
 
@@ -12,7 +12,7 @@ case class Matrix[T](rows: Vector[Vector[T]]) extends Iterable[T] {
   def row(row: Int): Vector[T] = rows(row)
 
   //  def cell(row: Int, col: Int): T = rows(row)(col)
-  def cell(row: Int, col: Int): Option[T] = if row < theSize && col < theSize then Some(rows(row)(col)) else None
+  def cell(row: Int, col: Int): Option[T] = if row < theSize && col < theSize && row >= 0 && col >= 0 then Some(rows(row)(col)) else None
 
   def putCell(row: Int, col: Int, cell: T): Matrix[T] = {
     copy(rows.updated(row, rows(row).updated(col, cell)))
@@ -22,27 +22,19 @@ case class Matrix[T](rows: Vector[Vector[T]]) extends Iterable[T] {
     copy(makeFill(theSize, cell))
   }
 
-  override def iterator: Iterator[T] = new Iterator[T] {
-    val msize = Matrix.this.theSize
-    var row = 0
-    var col = 0
-
-    override def hasNext: Boolean = row < msize && col < msize
-
-    override def next(): T = {
-      if (!hasNext) throw NoSuchElementException();
-
-      val value = Matrix.this.rows(row)(col)
-
-      col += 1
-
-      if (col >= msize) {
-        row += 1
-        col = 0
+  // 0 1 2
+  // 3 4 5
+  // 6 7 8
+  // 4 is always self
+  def surrounding(row: Int, col: Int): List[Option[T]] = {
+    var list = List[Option[T]]()
+    for (i <- -1 to 1) {
+      for (j <- -1 to 1) {
+        list = list :+ cell(row + i, col + j)
       }
-
-      value
     }
+
+    list
   }
 }
 

@@ -6,8 +6,8 @@ import de.htwg.se.reversi.model.stone.{Stone, StoneState}
 import scala.util.{Failure, Success, Try}
 
 case class PutCommand(controller: Controller, row: Int, col: Int) extends Command:
-  var replaced: Option[Stone] = None
-  var whoPlaced: Option[StoneState] = None
+  private var replaced: Option[Stone] = None
+  private var whoPlaced: Option[StoneState] = None
 
   override def doCommand(): Unit = {
     replaced = controller.gameState.field.getStone(row, col)

@@ -10,7 +10,7 @@ case class GameState(field: Field, currentPlayer: StoneState) {
   def put(row: Int, col: Int, stone: StoneState, next: StoneState): GameState =
     this.copy(field.put(row, col, Stone(stone)), next)
 
-  private def nextPlayer = currentPlayer match {
+  def nextPlayer = currentPlayer match {
     case WhiteStone => BlackStone
     case BlackStone => WhiteStone
     case _ => WhiteStone

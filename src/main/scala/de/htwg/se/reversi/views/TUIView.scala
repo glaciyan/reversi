@@ -19,6 +19,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
   private def inputLoop(): Unit = {
     println(displayField(controller.field))
     while !controller.finished do {
+      println(controller.field.getPlacableSpots(controller.currentPlayer, controller.gameState.nextPlayer))
       print(s"${controller.currentPlayer.renderText()} > ")
       val input = readInput()
       input match {
