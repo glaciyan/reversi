@@ -1,13 +1,15 @@
 package de.htwg.se.reversi.views
 
-import de.htwg.se.reversi.controller.Controller
+import de.htwg.se.reversi.controller.{Controller, InputCommand}
 import de.htwg.se.reversi.model.Field
 import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, GameDone, Placed}
-import de.htwg.se.reversi.util.{PutEvent, Observer}
+import de.htwg.se.reversi.util.{Observer, PutEvent}
 
 import java.text.ParseException
+import java.util
 import java.util.{InputMismatchException, Scanner}
 import scala.io.StdIn
+import scala.util.{Failure, Success, Try}
 
 class TUIView(controller: Controller) extends GameUI, Observer {
   controller.add(this)
@@ -20,25 +22,35 @@ class TUIView(controller: Controller) extends GameUI, Observer {
       print(s"${controller.currentPlayer.renderText()} > ")
       val input = readInput()
       input match {
-        case Some((row, col)) => controller.put(row, col)
-        case None => println("Invalid input please try again")
+        case Success((row: Int, col: Int)) => controller.put(row, col)
+        case Success(InputCommand.Undo) =>
+          controller.undo() match {
+            case Failure(_) => println("Invalid undo put some stones down first")
+            case _ =>
+          }
+        case Failure(_) => println("Invalid input please try again")
       }
     }
   }
 
-  private def readInput(): Option[(Int, Int)] = {
+  private def readInput(): Try[(Int, Int) | InputCommand] = {
     try {
       val input = StdIn.readLine()
+
+      if (input == "undo") {
+        return Success(InputCommand.Undo)
+      }
+
       val scanner = new Scanner(input)
       val values: (AnyVal, AnyVal) = (scanner.nextInt(), scanner.nextInt())
       scanner.close()
 
       values match {
-        case (row: Int, col: Int) if row < controller.field.size => Some((row, col))
-        case _ => None
+        case (row: Int, col: Int) if row < controller.field.size => Success((row, col))
+        case _ => Failure(new InputMismatchException())
       }
     } catch {
-      case _: Throwable => None
+      case e: Throwable => Failure(e)
     }
   }
 

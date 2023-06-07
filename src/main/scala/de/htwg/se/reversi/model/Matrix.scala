@@ -10,7 +10,8 @@ case class Matrix[T](rows: Vector[Vector[T]]) {
 
   def row(row: Int): Vector[T] = rows(row)
 
-  def cell(row: Int, col: Int): T = rows(row)(col)
+//  def cell(row: Int, col: Int): T = rows(row)(col)
+  def cell(row: Int, col: Int): Option[T] = if row < size && col < size then Some(rows(row)(col)) else None
 
   def putCell(row: Int, col: Int, cell: T): Matrix[T] = {
     copy(rows.updated(row, rows(row).updated(col, cell)))

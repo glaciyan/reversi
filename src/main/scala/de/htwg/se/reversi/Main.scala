@@ -3,7 +3,7 @@ package de.htwg.se.reversi
 
 import de.htwg.se.reversi.controller.Controller
 import de.htwg.se.reversi.model.Field
-import de.htwg.se.reversi.model.stone.{BlackStone, WhiteStone, Stone, StoneState}
+import de.htwg.se.reversi.model.stone.{BlackStone, Stone, StoneState, WhiteStone}
 import de.htwg.se.reversi.views.{GameUI, TUIView}
 
 import scala.io.StdIn.{readLine, readf, readf3}

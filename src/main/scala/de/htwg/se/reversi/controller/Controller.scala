@@ -6,23 +6,35 @@ import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, GameDone, Placed}
 import de.htwg.se.reversi.util.Observable
 
 import scala.collection.mutable
+import scala.util.{Failure, Success, Try}
 
-class Controller(private var gameState: GameState, var finished: Boolean = false) extends Observable {
-  private val history: mutable.Stack[GameState] = mutable.Stack()
+class Controller(var gameState: GameState, var finished: Boolean = false) extends Observable {
+  private val history: mutable.Stack[Command] = mutable.Stack()
 
   def this(field: Field, startingPlayer: StoneState) = this(GameState(field, startingPlayer), false)
 
   def put(row: Int, col: Int): Unit = {
-    history.push(gameState)
-    val (event, state) = gameState.put(row, col)
-    gameState = state
-    notifyObservers(event)
+    if field.getStone(row, col) match
+      case Some(value) => value.state != NoStone
+      case None => false
+    then {
+      notifyObservers(AlreadyPlacedError)
+      return
+    }
+
+    val command = PutCommand(this, row, col)
+    command.doCommand()
+    history.push(command)
+    notifyObservers(Placed)
   }
 
-  def undo(): GameState = {
+  def undo(): Try[GameState] = {
+    if (history.isEmpty) return Failure(new NoSuchElementException())
     val oldState = gameState
-    gameState = history.pop()
-    oldState
+    val command = history.pop()
+    command.undoCommand()
+    notifyObservers(Placed)
+    Success(oldState)
   }
 
   def field: Field = gameState.field

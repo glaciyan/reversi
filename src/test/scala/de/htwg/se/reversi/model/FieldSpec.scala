@@ -26,11 +26,14 @@ class FieldSpec extends AnyWordSpec {
           .put(0, 0, Stone(BlackStone))
           .put(0, 4, Stone(WhiteStone))
 
+        "have an option" in {
+          playingField.getStone(0, 4) should be(Some(Stone(WhiteStone)))
+        }
         "be able to get a single stone" in {
-          playingField.getStone(0, 4).state should be(WhiteStone)
-          playingField.getStone(3, 4).state should be(BlackStone)
-          playingField.getStone(0, 0).state should be(BlackStone)
-          playingField.getStone(6, 6).state should be(NoStone)
+          playingField.getStone(0, 4).get.state should be(WhiteStone)
+          playingField.getStone(3, 4).get.state should be(BlackStone)
+          playingField.getStone(0, 0).get.state should be(BlackStone)
+          playingField.getStone(6, 6).get.state should be(NoStone)
         }
       }
     }

@@ -3,10 +3,12 @@ package de.htwg.se.reversi.controller
 import de.htwg.se.reversi.model.Field
 import de.htwg.se.reversi.model.stone.{BlackStone, NoStone, Stone, StoneState, WhiteStone}
 import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, Placed}
-import de.htwg.se.reversi.util.{PutEvent, Observer}
+import de.htwg.se.reversi.util.{Observer, PutEvent}
 import de.htwg.se.reversi.views.TUIView
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.util.{Failure, Success}
 
 class ControllerSpec extends AnyWordSpec {
   val sampleField: Field = Field().put(3, 3, Stone(BlackStone)).put(3, 4, Stone(WhiteStone)).put(4, 3, Stone(WhiteStone)).put(4, 4, Stone(BlackStone))
@@ -15,12 +17,22 @@ class ControllerSpec extends AnyWordSpec {
     override def update(e: PutEvent): Unit = status = e
   }
 
-  "A Controller" when {
+  "A GameController" when {
     "created" should {
       "have a stone put" in {
         val controller = Controller(sampleField, WhiteStone)
         controller.put(0, 0)
-        controller.field.getStone(0, 0).state should be(WhiteStone)
+        val stone = controller.field.getStone(0, 0)
+        assert(stone.isDefined)
+        stone.get.state should be(WhiteStone)
+
+      }
+      "have no stone when getting out of bounds" in {
+        val controller = Controller(sampleField, WhiteStone)
+        controller.put(0, 0)
+
+        val wrongStone = controller.field.getStone(100, 100)
+        wrongStone should be(None)
       }
       "add,remove and notify observers" in {
 
@@ -43,8 +55,8 @@ class ControllerSpec extends AnyWordSpec {
         val observer = TestObserver(Placed)
         controller.add(observer)
 
-        controller.put(3,3)
-        observer.status should be (AlreadyPlacedError)
+        controller.put(3, 3)
+        observer.status should be(AlreadyPlacedError)
       }
     }
     "with weird stating values" should {
@@ -65,16 +77,24 @@ class ControllerSpec extends AnyWordSpec {
     "when playing a game" should {
       "undo a move and restore the undid" in {
         val controller = Controller(sampleField, WhiteStone)
-        controller.put(0,0)
-        controller.put(0,1)
-        controller.field.getStone(0,0).state should be (WhiteStone)
-        controller.field.getStone(0,1).state should be (BlackStone)
+        controller.put(0, 0)
+        controller.put(0, 1)
+        controller.field.getStone(0, 0).get.state should be(WhiteStone)
+        controller.field.getStone(0, 1).get.state should be(BlackStone)
 
         val oldState = controller.undo()
-        controller.field.getStone(0,1).state should be (NoStone)
+        oldState should not be Failure
+        controller.field.getStone(0, 1).get.state should be(NoStone)
 
-        val copyController = new Controller(oldState)
-        copyController.field.getStone(0,1).state should be (BlackStone)
+        val copyController = new Controller(oldState.get)
+        copyController.field.getStone(0, 1).get.state should be(BlackStone)
+      }
+      "fail on empty history" in {
+        val controller = Controller(sampleField, WhiteStone)
+        val oldState = controller.undo()
+        oldState match
+          case Failure(_) =>
+          case Success(_) => fail()
       }
     }
   }
