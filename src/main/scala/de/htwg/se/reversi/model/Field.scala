@@ -3,7 +3,7 @@ package de.htwg.se.reversi.model
 import de.htwg.se.reversi.model.stone.{NoStone, Stone}
 
 case class Field(m: Matrix[Stone] = new Matrix(8, Stone(NoStone))) {
-  def size: Int = m.size
+  def size: Int = m.theSize
 
   val eol: String = sys.props("line.separator")
 

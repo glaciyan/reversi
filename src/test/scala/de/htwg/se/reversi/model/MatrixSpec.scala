@@ -5,10 +5,10 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class MatrixSpec extends AnyWordSpec {
   "A Matrix" when {
-    "created with size and fill" should {
-      "have the correct size" in {
+    "created with theSize and fill" should {
+      "have the correct theSize" in {
         val matrix = new Matrix[String](10, "H")
-        matrix.size should be(10)
+        matrix.theSize should be(10)
         matrix.row(0).size should be(10)
       }
       "have the correct element" in {
@@ -22,8 +22,8 @@ class MatrixSpec extends AnyWordSpec {
       "be constructed properly" in {
         matrix.row(0) should be(vecVec(0))
       }
-      "have the current size" in {
-        matrix.size should be(6)
+      "have the current theSize" in {
+        matrix.theSize should be(6)
         matrix.row(0).size should be(6)
       }
       "have the correct element" in {

@@ -13,7 +13,7 @@ class FieldSpec extends AnyWordSpec {
       "have an empty row" in {
         emptyField.row(0).foreach(_.state should be(NoStone))
       }
-      "correct size" in {
+      "correct theSize" in {
         emptyField.size should be(8)
       }
     }
