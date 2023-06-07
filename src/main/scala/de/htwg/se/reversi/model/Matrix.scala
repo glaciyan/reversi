@@ -1,6 +1,7 @@
 package de.htwg.se.reversi.model
 
 import de.htwg.se.reversi.model.Matrix.makeFill
+import java.util.NoSuchElementException
 
 case class Matrix[T](rows: Vector[Vector[T]]) extends Iterable[T] {
 
@@ -29,13 +30,18 @@ case class Matrix[T](rows: Vector[Vector[T]]) extends Iterable[T] {
     override def hasNext: Boolean = row < msize && col < msize
 
     override def next(): T = {
+      if (!hasNext) throw NoSuchElementException();
+
+      val value = Matrix.this.rows(row)(col)
+
+      col += 1
+
       if (col >= msize) {
         row += 1
         col = 0
       }
 
-      col += 1
-      Matrix.this.rows(row)(col)
+      value
     }
   }
 }
