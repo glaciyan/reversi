@@ -2,8 +2,7 @@ package de.htwg.se.reversi.views
 
 import de.htwg.se.reversi.controller.{Controller, InputCommand}
 import de.htwg.se.reversi.model.Field
-import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, GameDone, InvalidPut, Placed}
-import de.htwg.se.reversi.util.{EmojiNumbers, Observer, PutEvent}
+import de.htwg.se.reversi.util.{AlreadyPlacedError, EmojiNumbers, GameDone, InvalidPut, Observer, Placed, PutEvent}
 
 import java.text.ParseException
 import java.util
@@ -62,7 +61,7 @@ class TUIView(controller: Controller) extends GameUI, Observer {
     case Placed => printField()
     case AlreadyPlacedError => println("You can't replace other stones")
     case InvalidPut => println("You can't place your stone here")
-    case GameDone =>
+    case GameDone(winner) =>
   }
 
   private def printField(): Unit = {
