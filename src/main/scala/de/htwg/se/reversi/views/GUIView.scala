@@ -24,6 +24,7 @@ class GUIView(controller: Controller) extends MainFrame, GameUI, Observer {
     contents += fieldPanel
   }
 
+  normal("it's your turn")
   reloadField()
 
   private def reloadField(): Unit = {
@@ -36,7 +37,6 @@ class GUIView(controller: Controller) extends MainFrame, GameUI, Observer {
         yield new GStone(r, c, stone))
       }
 
-    normal("it's your turn")
     pack()
   }
 
@@ -66,11 +66,14 @@ class GUIView(controller: Controller) extends MainFrame, GameUI, Observer {
   }
 
   override def update(e: PutEvent): Unit = e match {
-    case Placed => reloadField()
+    case Placed =>
+      normal("it's your turn")
+      reloadField()
     case AlreadyPlacedError => warning("this tile has already been placed")
     case GameDone(winner) =>
       gameOver = true
       good(s"${winner.name} won!")
+      reloadField()
     case InvalidPut => warning("you can't place anything here")
   }
 
