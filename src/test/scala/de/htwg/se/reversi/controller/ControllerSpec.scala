@@ -2,8 +2,7 @@ package de.htwg.se.reversi.controller
 
 import de.htwg.se.reversi.model.Field
 import de.htwg.se.reversi.model.stone.{BlackStone, NoStone, Stone, StoneState, WhiteStone}
-import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, Placed}
-import de.htwg.se.reversi.util.{Observer, PutEvent}
+import de.htwg.se.reversi.util.{AlreadyPlacedError, Observer, Placed, PutEvent}
 import de.htwg.se.reversi.views.TUIView
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec

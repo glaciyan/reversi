@@ -13,7 +13,7 @@ class PutCommandSpec extends AnyWordSpec {
   "PutCommand when not doing anything" should {
     "throw error" in {
       val controller = Controller(sampleField, WhiteStone)
-      val command = PutCommand(controller, 0, 0)
+      val command = PutCommand(controller, 0, 0, controller.getPossibleMoves)
       command.undoCommand() match {
         case Failure(exception) =>
         case Success(_) => fail("Test should not return Success")

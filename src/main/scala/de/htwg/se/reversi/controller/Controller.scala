@@ -12,7 +12,7 @@ class Controller(var gameState: GameState, var finished: Boolean = false) extend
 
   def this(field: Field, startingPlayer: StoneState) = this(GameState(field, startingPlayer), false)
 
-  def put(row: Int, col: Int, possibleMoves: List[Move]): Unit = {
+  def put(row: Int, col: Int, possibleMoves: List[Move] = Nil): Unit = {
     if field.getStone(row, col) match
       case Some(value) => value.state != NoStone
       case None => false
@@ -21,7 +21,7 @@ class Controller(var gameState: GameState, var finished: Boolean = false) extend
       return
     }
 
-    if (!possibleMoves.exists(m => m.on == Coordinate(row, col, gameState.currentPlayer))) {
+    if (possibleMoves != Nil && !possibleMoves.exists(m => m.on == Coordinate(row, col, gameState.currentPlayer))) {
       notifyObservers(InvalidPut)
     } else {
       val command = PutCommand(this, row, col, possibleMoves)
@@ -58,6 +58,8 @@ class Controller(var gameState: GameState, var finished: Boolean = false) extend
     notifyObservers(Placed)
     Success(oldState)
   }
+
+  def getPossibleMoves: List[Move] = field.getPossibleMoves(gameState.currentPlayer, gameState.nextPlayer)
 
   def field: Field = gameState.field
 
