@@ -7,7 +7,7 @@ import de.htwg.se.reversi.util.{AlreadyPlacedError, GameDone, InvalidPut, Observ
 import java.awt.{Color, Frame}
 import scala.language.postfixOps
 import scala.swing.event.MouseClicked
-import scala.swing.{BorderPanel, BoxPanel, Button, Component, Dimension, FlowPanel, GridPanel, Label, MainFrame, Orientation}
+import scala.swing.{Action, BorderPanel, BoxPanel, Button, Component, Dimension, FlowPanel, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Orientation}
 
 class GUIView(controller: Controller) extends MainFrame, GameUI, Observer {
   var gameOver = false
@@ -15,6 +15,13 @@ class GUIView(controller: Controller) extends MainFrame, GameUI, Observer {
   controller.add(this)
 
   title = "reversi"
+  menuBar = new MenuBar {
+    contents += new Menu("Edit") {
+      contents += new MenuItem(Action("Undo") {
+        controller.undo()
+      })
+    }
+  }
 
   private val fieldPanel = new FlowPanel()
   private val statusLabel = new Label()
