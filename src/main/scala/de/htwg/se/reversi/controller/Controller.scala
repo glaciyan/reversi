@@ -9,6 +9,7 @@ import scala.util.{Failure, Success, Try}
 
 class Controller(var gameState: GameState, var finished: Boolean = false) extends Observable {
   private val history: mutable.Stack[Command] = mutable.Stack()
+  private val future: mutable.Stack[Command] = mutable.Stack()
 
   def this(field: Field, startingPlayer: StoneState) = this(GameState(field, startingPlayer), false)
 
@@ -25,8 +26,7 @@ class Controller(var gameState: GameState, var finished: Boolean = false) extend
       notifyObservers(InvalidPut)
     } else {
       val command = PutCommand(this, row, col, possibleMoves)
-      command.doCommand()
-      history.push(command)
+      push(command)
 
       if (field.getPossibleMoves(gameState.currentPlayer, gameState.nextPlayer).isEmpty) {
         // count stones for winner
@@ -50,14 +50,36 @@ class Controller(var gameState: GameState, var finished: Boolean = false) extend
 
   }
 
+  private def push(command: Command): Unit = {
+    command.doCommand()
+    history.push(command)
+    future.clear()
+  }
+
   def undo(): Try[GameState] = {
     if (history.isEmpty) return Failure(new NoSuchElementException())
     val oldState = gameState
     val command = history.pop()
     command.undoCommand()
+    future.push(command)
     notifyObservers(Placed)
     Success(oldState)
   }
+
+  def redo(): Try[GameState] = {
+    if (future.isEmpty) return Failure(new NoSuchElementException())
+    val command = future.pop()
+    val oldState = gameState
+    command.doCommand()
+    history.push(command)
+    notifyObservers(Placed)
+    Success(oldState)
+  }
+
+  def canUndo: Boolean = history.nonEmpty
+  def canRedo: Boolean = future.nonEmpty
+
+  def getLastCommand: Command = history.top
 
   def getPossibleMoves: List[Move] = field.getPossibleMoves(gameState.currentPlayer, gameState.nextPlayer)
 

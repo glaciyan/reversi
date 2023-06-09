@@ -31,3 +31,5 @@ case class PutCommand(controller: Controller, row: Int, col: Int, moves: List[Mo
       case _ => Failure(new IllegalStateException("doCommand has to be called first"))
     }
   }
+
+  override def actionName(): String = s"Place ${whoPlaced.get.name} stone"

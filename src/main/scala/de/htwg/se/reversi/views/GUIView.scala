@@ -15,13 +15,6 @@ class GUIView(controller: Controller) extends MainFrame, GameUI, Observer {
   controller.add(this)
 
   title = "reversi"
-  menuBar = new MenuBar {
-    contents += new Menu("Edit") {
-      contents += new MenuItem(Action("Undo") {
-        controller.undo()
-      })
-    }
-  }
 
   private val fieldPanel = new FlowPanel()
   private val statusLabel = new Label()
@@ -43,6 +36,22 @@ class GUIView(controller: Controller) extends MainFrame, GameUI, Observer {
           stone <- controller.field.getStone(r, c)
         yield new GStone(r, c, stone))
       }
+
+    menuBar = new MenuBar {
+      contents += new Menu("Edit") {
+        contents += new MenuItem(Action("Undo") {
+          controller.undo()
+        }) {
+          enabled = controller.canUndo
+          if (enabled) text = s"Undo ${controller.getLastCommand.actionName()}"
+        }
+        contents += new MenuItem(Action("Redo") {
+          controller.redo()
+        }) {
+          enabled = controller.canRedo
+        }
+      }
+    }
 
     pack()
   }
