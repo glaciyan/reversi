@@ -7,13 +7,13 @@ import de.htwg.se.reversi.util.{AlreadyPlacedError, GameDone, InvalidPut, Observ
 import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 
-class Controller(var gameState: GameState, var finished: Boolean = false) extends Observable {
+class Controller(var gameState: GameState, var finished: Boolean = false) extends IController {
   private val history: mutable.Stack[Command] = mutable.Stack()
   private val future: mutable.Stack[Command] = mutable.Stack()
 
   def this(field: Field, startingPlayer: StoneState) = this(GameState(field, startingPlayer), false)
 
-  def put(row: Int, col: Int, possibleMoves: List[Move] = Nil): Unit = {
+  override def put(row: Int, col: Int, possibleMoves: List[Move] = Nil): Unit = {
     if field.getStone(row, col) match
       case Some(value) => value.state != NoStone
       case None => false
@@ -56,7 +56,7 @@ class Controller(var gameState: GameState, var finished: Boolean = false) extend
     future.clear()
   }
 
-  def undo(): Try[GameState] = {
+  override def undo(): Try[GameState] = {
     if (history.isEmpty) return Failure(new NoSuchElementException())
     val oldState = gameState
     val command = history.pop()
@@ -66,7 +66,7 @@ class Controller(var gameState: GameState, var finished: Boolean = false) extend
     Success(oldState)
   }
 
-  def redo(): Try[GameState] = {
+  override def redo(): Try[GameState] = {
     if (future.isEmpty) return Failure(new NoSuchElementException())
     val command = future.pop()
     val oldState = gameState
@@ -76,14 +76,14 @@ class Controller(var gameState: GameState, var finished: Boolean = false) extend
     Success(oldState)
   }
 
-  def canUndo: Boolean = history.nonEmpty
-  def canRedo: Boolean = future.nonEmpty
+  override def canUndo: Boolean = history.nonEmpty
+  override def canRedo: Boolean = future.nonEmpty
 
-  def getLastCommand: Command = history.top
+  override def getLastCommand: Command = history.top
 
-  def getPossibleMoves: List[Move] = field.getPossibleMoves(gameState.currentPlayer, gameState.nextPlayer)
+  override def getPossibleMoves: List[Move] = field.getPossibleMoves(gameState.currentPlayer, gameState.nextPlayer)
 
-  def field: Field = gameState.field
+  override def field: Field = gameState.field
 
-  def currentPlayer: StoneState = gameState.currentPlayer
+  override def currentPlayer: StoneState = gameState.currentPlayer
 }

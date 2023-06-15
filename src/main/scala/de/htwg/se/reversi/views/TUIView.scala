@@ -1,16 +1,15 @@
 package de.htwg.se.reversi.views
 
-import de.htwg.se.reversi.controller.{Controller, InputCommand}
+import de.htwg.se.reversi.controller.{Controller, IController, InputCommand}
 import de.htwg.se.reversi.model.Field
-import de.htwg.se.reversi.util.{AlreadyPlacedError, EmojiNumbers, GameDone, InvalidPut, Observer, Placed, PutEvent}
+import de.htwg.se.reversi.util.*
 
 import java.text.ParseException
-import java.util
 import java.util.{InputMismatchException, Scanner}
 import scala.io.StdIn
 import scala.util.{Failure, Success, Try}
 
-class TUIView(controller: Controller) extends GameUI, Observer {
+class TUIView(using controller: IController) extends GameUI, Observer {
   controller.add(this)
 
   override def run(): Unit = inputLoop()

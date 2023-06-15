@@ -1,15 +1,16 @@
 package de.htwg.se.reversi.views
 
-import de.htwg.se.reversi.controller.Controller
+import de.htwg.se.reversi.controller.{Controller, IController}
 import de.htwg.se.reversi.model.stone.{Stone, WhiteStone}
-import de.htwg.se.reversi.util.{AlreadyPlacedError, GameDone, InvalidPut, Observable, Observer, Placed, PutEvent}
+import de.htwg.se.reversi.util.*
 
 import java.awt.{Color, Frame}
 import scala.language.postfixOps
 import scala.swing.event.MouseClicked
-import scala.swing.{Action, BorderPanel, BoxPanel, Button, Component, Dimension, FlowPanel, GridPanel, Label, MainFrame, Menu, MenuBar, MenuItem, Orientation}
+import scala.swing.*
 
-class GUIView(controller: Controller) extends MainFrame, GameUI, Observer {
+
+class GUIView(using controller: IController) extends MainFrame, GameUI, Observer {
   var gameOver = false
 
   controller.add(this)
