@@ -7,12 +7,12 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.{Failure, Success}
 
-class PutCommandSpec extends AnyWordSpec {
-  val sampleField: Field = Field().put(3, 3, Stone(BlackStone)).put(3, 4, Stone(WhiteStone)).put(4, 3, Stone(WhiteStone)).put(4, 4, Stone(BlackStone))
+import de.htwg.se.reversi.controller.modules.Test.given
 
+class PutCommandSpec extends AnyWordSpec {
   "PutCommand when not doing anything" should {
     "throw error" in {
-      val controller = Controller(sampleField, WhiteStone)
+      val controller = Controller()
       val command = PutCommand(controller, 0, 0, controller.getPossibleMoves)
       command.undoCommand() match {
         case Failure(exception) =>
