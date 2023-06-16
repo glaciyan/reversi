@@ -25,7 +25,5 @@ trait IController extends Observable {
 
   def currentPlayer: StoneState
 
-  def finished: Boolean
-
   def gameState: IGameState
 }
