@@ -41,6 +41,7 @@ class GUIView(using controller: IController) extends MainFrame, GameUI, Observer
     menuBar = new MenuBar {
       contents += new Menu("Edit") {
         contents += new MenuItem(Action("Undo") {
+          gameOver = false
           controller.undo()
         }) {
           enabled = controller.canUndo
