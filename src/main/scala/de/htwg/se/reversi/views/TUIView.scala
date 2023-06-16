@@ -14,7 +14,8 @@ class TUIView(using controller: IController) extends GameUI, Observer {
 
   override def run(): Unit = inputLoop()
 
-  var finished = false;
+  private var finished = false
+
   private def inputLoop(): Unit = {
     printField()
 
