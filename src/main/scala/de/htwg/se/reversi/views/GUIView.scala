@@ -25,7 +25,7 @@ class GUIView(using controller: IController) extends MainFrame, GameUI, Observer
     contents += fieldPanel
   }
 
-  normal("it's your turn")
+  player("it's your turn")
   reloadField()
 
   private def reloadField(): Unit = {
@@ -58,7 +58,7 @@ class GUIView(using controller: IController) extends MainFrame, GameUI, Observer
     pack()
   }
 
-  private def normal(s: String): Unit = {
+  private def player(s: String): Unit = {
     statusLabel.foreground = Color.BLACK
     statusLabel.text = s"${controller.gameState.currentPlayer.name} $s"
     pack()
@@ -85,7 +85,7 @@ class GUIView(using controller: IController) extends MainFrame, GameUI, Observer
 
   override def update(e: PutEvent): Unit = e match {
     case Placed =>
-      normal("it's your turn")
+      player("it's your turn")
       reloadField()
     case AlreadyPlacedError => warning("this tile has already been placed")
     case GameDone(winner) =>
