@@ -14,10 +14,11 @@ class TUIView(using controller: IController) extends GameUI, Observer {
 
   override def run(): Unit = inputLoop()
 
+  var finished = false;
   private def inputLoop(): Unit = {
     printField()
 
-    while !controller.finished do {
+    while !finished do {
       val possibleMoves = controller.field.getPossibleMoves(controller.gameState.currentPlayer, controller.gameState.nextPlayer)
       println(s"${possibleMoves.size} possible moves: ${possibleMoves.map(m => (m.on.row + 1, EmojiNumbers.convert(m.on.col + 1))).mkString(", ")}")
 
@@ -60,7 +61,7 @@ class TUIView(using controller: IController) extends GameUI, Observer {
     case Placed => printField()
     case AlreadyPlacedError => println("You can't replace other stones")
     case InvalidPut => println("You can't place your stone here")
-    case GameDone(winner) =>
+    case GameDone(winner) => finished = true
   }
 
   private def printField(): Unit = {

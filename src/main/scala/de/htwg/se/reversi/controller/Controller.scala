@@ -8,7 +8,6 @@ import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 
 class Controller(using var gameState: IGameState) extends IController {
-  var finished: Boolean = false
   private val history: mutable.Stack[Command] = mutable.Stack()
   private val future: mutable.Stack[Command] = mutable.Stack()
 
