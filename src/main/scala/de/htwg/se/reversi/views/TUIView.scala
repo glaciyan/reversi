@@ -1,7 +1,7 @@
 package de.htwg.se.reversi.views
 
 import de.htwg.se.reversi.controller.{Controller, IController, InputCommand}
-import de.htwg.se.reversi.model.Field
+import de.htwg.se.reversi.model.{Field, IField}
 import de.htwg.se.reversi.util.*
 
 import java.text.ParseException
@@ -24,7 +24,7 @@ class TUIView(using controller: IController) extends GameUI, Observer {
       print(s"${controller.currentPlayer.renderText()} > ")
       val input = readInput()
       input match {
-        case Success((row: Int, col: Int)) => controller.put(row - 1, col - 1, possibleMoves)
+        case Success((row: Int, col: Int)) => controller.put(row - 1, col - 1)
         case Success(InputCommand.Undo) =>
           controller.undo() match {
             case Failure(_) => println("Invalid undo, put some stones down first")
@@ -68,9 +68,9 @@ class TUIView(using controller: IController) extends GameUI, Observer {
     println(displayField(controller.field))
   }
 
-  private def displayField(field: Field): String = (0 until field.size).map(i => s"${i + 1} ${fieldRow(field, i)}").mkString(field.eol)
+  private def displayField(field: IField): String = (0 until field.size).map(i => s"${i + 1} ${fieldRow(field, i)}").mkString(field.eol)
 
-  private def fieldRow(field: Field, row: Int): String = field.row(row).map(_.renderText()).mkString("")
+  private def fieldRow(field: IField, row: Int): String = field.row(row).map(_.renderText()).mkString("")
 }
 
 // $COVERAGE-ON$

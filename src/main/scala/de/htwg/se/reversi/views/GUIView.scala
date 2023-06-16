@@ -107,7 +107,7 @@ class GUIView(using controller: IController) extends MainFrame, GameUI, Observer
     listenTo(mouse.clicks)
     reactions += {
       case MouseClicked(src, pt, mod, clicks, props) =>
-        if (!gameOver) controller.put(row, col, possibleMoves())
+        if (!gameOver) controller.put(row, col)
     }
   }
 }
