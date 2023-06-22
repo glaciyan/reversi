@@ -11,7 +11,7 @@ import scala.swing.*
 
 
 class GUIView(using controller: IController) extends MainFrame, GameUI, Observer {
-  var gameOver = false
+  private var gameOver = false
 
   controller.add(this)
 
