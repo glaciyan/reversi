@@ -1,7 +1,8 @@
 package de.htwg.se.reversi.model
 
 import de.htwg.se.reversi.model.stone.{BlackStone, NoStone, Stone, StoneState, WhiteStone}
-import de.htwg.se.reversi.util.XMLParseException
+import de.htwg.se.reversi.util.{JSONParseException, XMLParseException}
+import play.api.libs.json.{JsArray, JsValue, Json}
 
 import scala.util.{Failure, Success, Try}
 import scala.xml.Node
@@ -74,12 +75,14 @@ case class Field(m: Matrix[Stone] = new Matrix(8, Stone(NoStone))) extends IFiel
       {v.map(s => s.toXML)}
     </row>)}
   </field>
+
+  override def json: JsValue = Json.toJson(m.rows.map(r => r.map(_.json)))
 }
 
 import scala.util.control.Breaks.{break, tryBreakable}
 
-object Field extends XMLDeserializable[IField] {
-  def fromXML(node: Node): Try[IField] = {
+object Field extends XMLDeserializable[IField], JSONDeserializable[IField] {
+  override def fromXML(node: Node): Try[IField] = {
     tryBreakable {
       val matrix =
         (node \ "row").map(
@@ -94,5 +97,25 @@ object Field extends XMLDeserializable[IField] {
     } catchBreak {
       Failure(new XMLParseException("can't read field"))
     }
+  }
+
+  override def fromJSON(json: JsValue): Try[IField] = {
+    if (!json.isInstanceOf[JsArray]) Failure(new IllegalArgumentException("has to be array"))
+
+    tryBreakable {
+      val matrix = json.asInstanceOf[JsArray].value.map(js => {
+        if (!js.isInstanceOf[JsArray]) break()
+        val row = js.asInstanceOf[JsArray].value
+        row.map(s => Stone.fromJSON(s) match {
+          case Failure(exception) => break()
+          case Success(value) => value
+        }).toVector
+      }).toVector
+
+      Success(Field(Matrix(matrix)))
+    } catchBreak {
+      Failure(new JSONParseException("cant read field"))
+    }
+
   }
 }

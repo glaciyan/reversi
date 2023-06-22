@@ -1,7 +1,7 @@
 package de.htwg.se.reversi.controller.modules
 
-import de.htwg.se.reversi.controller.{Controller, IController, IFileSave, XMLFileSave}
-import de.htwg.se.reversi.model.{Field, GameState, IField, IGameState, XMLDeserializable}
+import de.htwg.se.reversi.controller.{Controller, IController, IFileSave, JSONFileSave, XMLFileSave}
+import de.htwg.se.reversi.model.{Field, GameState, IField, IGameState, JSONDeserializable, XMLDeserializable}
 import de.htwg.se.reversi.model.stone.{BlackStone, Stone, WhiteStone}
 
 object Default {
@@ -12,7 +12,9 @@ object Default {
     .put(3, 3, Stone(WhiteStone)))
 
   given XMLDeserializable[IGameState] = GameState
-  given IFileSave = XMLFileSave()
+  given JSONDeserializable[IGameState] = GameState
+
+  given IFileSave = JSONFileSave()
 
   given IController = Controller()
 }
