@@ -2,7 +2,7 @@ package de.htwg.se.reversi.model
 
 import de.htwg.se.reversi.model.stone.{Stone, StoneState}
 
-trait IField {
+trait IField extends XMLSerializable {
   def size: Int
 
   val eol: String

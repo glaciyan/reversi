@@ -2,7 +2,7 @@ package de.htwg.se.reversi.model
 
 import de.htwg.se.reversi.model.stone.{BlackStone, Stone, StoneState, WhiteStone}
 
-trait IGameState {
+trait IGameState extends XMLSerializable {
   def currentPlayer: StoneState
 
   def field: IField

@@ -1,6 +1,10 @@
 package de.htwg.se.reversi.model
 
 import de.htwg.se.reversi.model.stone.{BlackStone, NoStone, Stone, StoneState, WhiteStone}
+import de.htwg.se.reversi.util.XMLParseException
+
+import scala.util.{Failure, Success, Try}
+import scala.xml.Node
 
 case class Field(m: Matrix[Stone] = new Matrix(8, Stone(NoStone))) extends IField {
   override def size: Int = m.theSize
@@ -63,5 +67,32 @@ case class Field(m: Matrix[Stone] = new Matrix(8, Stone(NoStone))) extends IFiel
     }
 
     if black > white then Some(BlackStone) else if black == white then None else Some(WhiteStone)
+  }
+
+  override def toXML: Node = <field>
+    {m.rows.map(v => <row>
+      {v.map(s => s.toXML)}
+    </row>)}
+  </field>
+}
+
+import scala.util.control.Breaks.{break, tryBreakable}
+
+object Field extends XMLDeserializable[IField] {
+  def fromXML(node: Node): Try[IField] = {
+    tryBreakable {
+      val matrix =
+        (node \ "row").map(
+          row => (row \ "stone").map(
+            s => Stone.fromXML(s) match
+              case Failure(exception) => break()
+              case Success(value) => value
+          ).toVector
+        ).toVector
+
+      Success(Field(Matrix(matrix)))
+    } catchBreak {
+      Failure(new XMLParseException("can't read field"))
+    }
   }
 }

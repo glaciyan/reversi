@@ -4,6 +4,7 @@ import de.htwg.se.reversi.model.stone.StoneState
 import de.htwg.se.reversi.model.{Field, GameState, IField, IGameState, Move}
 import de.htwg.se.reversi.util.Observable
 
+import java.io.File
 import scala.util.Try
 
 trait IController extends Observable {
@@ -12,6 +13,12 @@ trait IController extends Observable {
   def undo(): Try[IGameState]
 
   def redo(): Try[IGameState]
+
+  def clearHistory(): Unit
+
+  def saveToFile(path: File): Try[Unit]
+
+  def readFromFile(path: File): Try[Unit]
 
   def canUndo: Boolean
 

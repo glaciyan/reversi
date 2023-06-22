@@ -8,6 +8,8 @@ import java.awt.{Color, Frame}
 import scala.language.postfixOps
 import scala.swing.event.MouseClicked
 import scala.swing.*
+import scala.swing.FileChooser.Result
+import scala.util.{Failure, Success}
 
 
 class GUIView(using controller: IController) extends MainFrame, GameUI, Observer {
@@ -31,12 +33,12 @@ class GUIView(using controller: IController) extends MainFrame, GameUI, Observer
   private def reloadField(): Unit = {
     fieldPanel.contents.clear()
     fieldPanel.contents += new GridPanel(controller.field.size, controller.field.size) {
-        contents ++= (for
-          r <- 0 until controller.field.size
-          c <- 0 until controller.field.size
-          stone <- controller.field.getStone(r, c)
-        yield new GStone(r, c, stone))
-      }
+      contents ++= (for
+        r <- 0 until controller.field.size
+        c <- 0 until controller.field.size
+        stone <- controller.field.getStone(r, c)
+      yield new GStone(r, c, stone))
+    }
 
     menuBar = new MenuBar {
       contents += new Menu("Edit") {
@@ -52,6 +54,27 @@ class GUIView(using controller: IController) extends MainFrame, GameUI, Observer
         }) {
           enabled = controller.canRedo
         }
+        contents += new MenuItem(Action("Reset game") {
+          while (controller.canUndo) controller.undo()
+        })
+        contents += new Separator()
+        contents += new MenuItem(Action("Save to file...") {
+          val picker = FileChooser()
+          picker.showSaveDialog(this) match
+            case Result.Approve => controller.saveToFile(picker.selectedFile)
+            case Result.Cancel =>
+            case Result.Error =>
+        })
+        contents += new MenuItem(Action("Load save file...") {
+          val picker = FileChooser()
+          picker.showOpenDialog(this) match
+            case Result.Approve => controller.readFromFile(picker.selectedFile) match {
+              case Failure(exception) => println(exception)
+              case Success(value) =>
+            }
+            case Result.Cancel =>
+            case Result.Error =>
+        })
       }
     }
 
@@ -63,6 +86,7 @@ class GUIView(using controller: IController) extends MainFrame, GameUI, Observer
     statusLabel.text = s"${controller.gameState.currentPlayer.name} $s"
     pack()
   }
+
   private def warning(s: String): Unit = {
     statusLabel.foreground = Color.RED
     statusLabel.text = s"${controller.gameState.currentPlayer.name} $s"

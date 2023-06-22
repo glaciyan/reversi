@@ -4,10 +4,11 @@ import de.htwg.se.reversi.model.{Coordinate, GameState, IField, IGameState, Move
 import de.htwg.se.reversi.model.stone.{BlackStone, NoStone, Stone, StoneState, WhiteStone}
 import de.htwg.se.reversi.util.{AlreadyPlacedError, GameDone, InvalidPut, Observable, Placed}
 
+import java.io.File
 import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 
-class Controller(using var gameState: IGameState) extends IController {
+class Controller(using var gameState: IGameState)(using val saver: IFileSave) extends IController {
   private val history: mutable.Stack[Command] = mutable.Stack()
   private val future: mutable.Stack[Command] = mutable.Stack()
 
@@ -31,6 +32,15 @@ class Controller(using var gameState: IGameState) extends IController {
     }
   }
 
+  override def saveToFile(path: File): Try[Unit] = saver.write(path, gameState)
+
+  override def readFromFile(path: File): Try[Unit] = saver.read(path) match {
+    case Failure(exception) => Failure(exception)
+    case Success(value) =>
+      clearHistory()
+      gameState = value
+      Success(notifyObservers(Placed))
+  }
 
   private def push(command: Command): Unit = {
     command.doCommand()
@@ -56,6 +66,12 @@ class Controller(using var gameState: IGameState) extends IController {
     history.push(command)
     notifyObservers(Placed)
     Success(oldState)
+  }
+
+
+  override def clearHistory(): Unit = {
+    history.clear()
+    future.clear()
   }
 
   override def canUndo: Boolean = history.nonEmpty
