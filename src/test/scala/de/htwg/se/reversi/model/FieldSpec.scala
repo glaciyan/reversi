@@ -38,4 +38,18 @@ class FieldSpec extends AnyWordSpec {
       }
     }
   }
+  "Another Field" when {
+    "a default field" should {
+      val field = Field()
+
+      "get possible moves" in {
+        val moves = field.getPossibleMoves(BlackStone, WhiteStone)
+        moves shouldBe List()
+      }
+      "get the winner" in {
+        val winner = field.getWinner(BlackStone, WhiteStone)
+        winner shouldBe None
+      }
+    }
+  }
 }
