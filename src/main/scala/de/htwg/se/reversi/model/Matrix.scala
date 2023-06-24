@@ -21,21 +21,6 @@ case class Matrix[T](rows: Vector[Vector[T]]) {
   def fill(cell: T): Matrix[T] = {
     copy(makeFill(theSize, cell))
   }
-
-  // 0 1 2
-  // 3 4 5
-  // 6 7 8
-  // 4 is always self
-  def surrounding(row: Int, col: Int): List[Option[T]] = {
-    var list = List[Option[T]]()
-    for (i <- -1 to 1) {
-      for (j <- -1 to 1) {
-        list = list :+ cell(row + i, col + j)
-      }
-    }
-
-    list
-  }
 }
 
 object Matrix {
