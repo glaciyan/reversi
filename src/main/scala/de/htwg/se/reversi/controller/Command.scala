@@ -5,4 +5,5 @@ import scala.util.Try
 trait Command() {
   def doCommand(): Unit
   def undoCommand(): Try[Unit]
+  def actionName(): String
 }

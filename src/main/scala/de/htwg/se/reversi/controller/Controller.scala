@@ -1,43 +1,88 @@
 package de.htwg.se.reversi.controller
 
-import de.htwg.se.reversi.model.{Field, GameState}
+import de.htwg.se.reversi.model.{Coordinate, GameState, IField, IGameState, Move}
 import de.htwg.se.reversi.model.stone.{BlackStone, NoStone, Stone, StoneState, WhiteStone}
-import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, GameDone, Placed}
-import de.htwg.se.reversi.util.Observable
+import de.htwg.se.reversi.util.{AlreadyPlacedError, GameDone, InvalidPut, Observable, Placed}
 
+import java.io.File
 import scala.collection.mutable
 import scala.util.{Failure, Success, Try}
 
-class Controller(var gameState: GameState, var finished: Boolean = false) extends Observable {
+class Controller(using var gameState: IGameState)(using val saver: IFileSave) extends IController {
   private val history: mutable.Stack[Command] = mutable.Stack()
+  private val future: mutable.Stack[Command] = mutable.Stack()
 
-  def this(field: Field, startingPlayer: StoneState) = this(GameState(field, startingPlayer), false)
-
-  def put(row: Int, col: Int): Unit = {
-    if field.getStone(row, col) match
-      case Some(value) => value.state != NoStone
-      case None => false
-    then {
+  override def put(row: Int, col: Int): Unit = {
+    if (field.hasStonePlaced(row, col)) {
       notifyObservers(AlreadyPlacedError)
       return
     }
 
-    val command = PutCommand(this, row, col)
-    command.doCommand()
-    history.push(command)
-    notifyObservers(Placed)
+    val possibleMoves = field.getPossibleMoves(gameState.currentPlayer, gameState.nextPlayer)
+
+    if (possibleMoves != Nil && !possibleMoves.exists(m => m.on == Coordinate(row, col, gameState.currentPlayer))) {
+      notifyObservers(InvalidPut)
+    } else {
+      val command = PutCommand(this, row, col, possibleMoves)
+      push(command)
+
+      field.getWinner(gameState.currentPlayer, gameState.nextPlayer) match
+        case Some(winner) => notifyObservers(GameDone(Stone(winner)))
+        case None => notifyObservers(Placed)
+    }
   }
 
-  def undo(): Try[GameState] = {
+  override def saveToFile(path: File): Try[Unit] = saver.write(path, gameState)
+
+  override def readFromFile(path: File): Try[Unit] = saver.read(path) match {
+    case Failure(exception) => Failure(exception)
+    case Success(value) =>
+      clearHistory()
+      gameState = value
+      Success(notifyObservers(Placed))
+  }
+
+  private def push(command: Command): Unit = {
+    command.doCommand()
+    history.push(command)
+    future.clear()
+  }
+
+  override def undo(): Try[IGameState] = {
     if (history.isEmpty) return Failure(new NoSuchElementException())
     val oldState = gameState
     val command = history.pop()
     command.undoCommand()
+    future.push(command)
     notifyObservers(Placed)
     Success(oldState)
   }
 
-  def field: Field = gameState.field
+  override def redo(): Try[IGameState] = {
+    if (future.isEmpty) return Failure(new NoSuchElementException())
+    val command = future.pop()
+    val oldState = gameState
+    command.doCommand()
+    history.push(command)
+    notifyObservers(Placed)
+    Success(oldState)
+  }
 
-  def currentPlayer: StoneState = gameState.currentPlayer
+
+  override def clearHistory(): Unit = {
+    history.clear()
+    future.clear()
+  }
+
+  override def canUndo: Boolean = history.nonEmpty
+
+  override def canRedo: Boolean = future.nonEmpty
+
+  override def getLastCommand: Command = history.top
+
+  override def getPossibleMoves: List[Move] = field.getPossibleMoves(gameState.currentPlayer, gameState.nextPlayer)
+
+  override def field: IField = gameState.field
+
+  override def currentPlayer: StoneState = gameState.currentPlayer
 }

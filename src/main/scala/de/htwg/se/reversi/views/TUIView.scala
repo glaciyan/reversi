@@ -1,31 +1,35 @@
 package de.htwg.se.reversi.views
 
-import de.htwg.se.reversi.controller.{Controller, InputCommand}
-import de.htwg.se.reversi.model.Field
-import de.htwg.se.reversi.util.PutEvent.{AlreadyPlacedError, GameDone, Placed}
-import de.htwg.se.reversi.util.{Observer, PutEvent}
+import de.htwg.se.reversi.controller.{Controller, IController, InputCommand}
+import de.htwg.se.reversi.model.{Field, IField}
+import de.htwg.se.reversi.util.*
 
 import java.text.ParseException
-import java.util
 import java.util.{InputMismatchException, Scanner}
 import scala.io.StdIn
 import scala.util.{Failure, Success, Try}
 
-class TUIView(controller: Controller) extends GameUI, Observer {
+class TUIView(using controller: IController) extends GameUI, Observer {
   controller.add(this)
 
   override def run(): Unit = inputLoop()
 
+  private var finished = false
+
   private def inputLoop(): Unit = {
-    println(displayField(controller.field))
-    while !controller.finished do {
+    printField()
+
+    while !finished do {
+      val possibleMoves = controller.field.getPossibleMoves(controller.gameState.currentPlayer, controller.gameState.nextPlayer)
+      println(s"${possibleMoves.size} possible moves: ${possibleMoves.map(m => (m.on.row + 1, EmojiNumbers.convert(m.on.col + 1))).mkString(", ")}")
+
       print(s"${controller.currentPlayer.renderText()} > ")
       val input = readInput()
       input match {
-        case Success((row: Int, col: Int)) => controller.put(row, col)
+        case Success((row: Int, col: Int)) => controller.put(row - 1, col - 1)
         case Success(InputCommand.Undo) =>
           controller.undo() match {
-            case Failure(_) => println("Invalid undo put some stones down first")
+            case Failure(_) => println("Invalid undo, put some stones down first")
             case _ =>
           }
         case Failure(_) => println("Invalid input please try again")
@@ -55,14 +59,20 @@ class TUIView(controller: Controller) extends GameUI, Observer {
   }
 
   override def update(e: PutEvent): Unit = e match {
-    case Placed => println(displayField(controller.field))
+    case Placed => printField()
     case AlreadyPlacedError => println("You can't replace other stones")
-    case GameDone =>
+    case InvalidPut => println("You can't place your stone here")
+    case GameDone(winner) => finished = true
   }
 
-  private def displayField(field: Field): String = (0 until field.size).map(fieldRow(field, _)).mkString(field.eol)
+  private def printField(): Unit = {
+    println(s"  ${(1 to controller.field.size).map(EmojiNumbers.convert).mkString("")}")
+    println(displayField(controller.field))
+  }
 
-  private def fieldRow(field: Field, row: Int): String = field.row(row).map(_.renderText()).mkString("")
+  private def displayField(field: IField): String = (0 until field.size).map(i => s"${i + 1} ${fieldRow(field, i)}").mkString(field.eol)
+
+  private def fieldRow(field: IField, row: Int): String = field.row(row).map(_.renderText()).mkString("")
 }
 
 // $COVERAGE-ON$

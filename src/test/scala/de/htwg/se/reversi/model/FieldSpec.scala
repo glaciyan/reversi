@@ -13,7 +13,7 @@ class FieldSpec extends AnyWordSpec {
       "have an empty row" in {
         emptyField.row(0).foreach(_.state should be(NoStone))
       }
-      "correct size" in {
+      "correct theSize" in {
         emptyField.size should be(8)
       }
     }
@@ -35,6 +35,20 @@ class FieldSpec extends AnyWordSpec {
           playingField.getStone(0, 0).get.state should be(BlackStone)
           playingField.getStone(6, 6).get.state should be(NoStone)
         }
+      }
+    }
+  }
+  "Another Field" when {
+    "a default field" should {
+      val field = Field()
+
+      "get possible moves" in {
+        val moves = field.getPossibleMoves(BlackStone, WhiteStone)
+        moves shouldBe List()
+      }
+      "get the winner" in {
+        val winner = field.getWinner(BlackStone, WhiteStone)
+        winner shouldBe None
       }
     }
   }
