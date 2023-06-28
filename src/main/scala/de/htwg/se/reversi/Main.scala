@@ -10,7 +10,7 @@ import de.htwg.se.reversi.views.{GUIView, GameUI, TUIView}
 import scala.io.StdIn.{readLine, readf, readf3}
 
 @main def main(): Unit =
-  val game: GameUI = GUIView()
+  val game: GameUI = TUIView()
   game.run()
 
 // $COVERAGE-ON$
