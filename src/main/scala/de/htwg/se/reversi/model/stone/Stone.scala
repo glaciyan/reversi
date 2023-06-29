@@ -20,8 +20,7 @@ case class Stone(state: StoneState) extends XMLSerializable, JSONSerializable {
   private def stoneSerialize(): String = state match {
     case BlackStone => "black"
     case WhiteStone => "white"
-    case NoStone => "nothing"
-    case _ => "empty"
+    case _ => "nothing"
   }
 
   override def toXML: Node = <stone>
