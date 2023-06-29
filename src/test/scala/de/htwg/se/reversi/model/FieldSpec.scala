@@ -3,6 +3,10 @@ package de.htwg.se.reversi.model
 import de.htwg.se.reversi.model.stone.{BlackStone, NoStone, Stone, WhiteStone}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
+import play.api.libs.json.Json
+
+import scala.util.{Failure, Success}
+import scala.xml.{Utility, XML}
 
 class FieldSpec extends AnyWordSpec {
   val eol: String = sys.props("line.separator")
@@ -35,6 +39,63 @@ class FieldSpec extends AnyWordSpec {
           playingField.getStone(0, 0).get.state should be(BlackStone)
           playingField.getStone(6, 6).get.state should be(NoStone)
         }
+      }
+    }
+  }
+  "Serialization/Deserialization" should {
+    val sField = Field(new Matrix(2, Stone(NoStone))).put(0, 0, Stone(WhiteStone)).put(1, 1, Stone(BlackStone))
+
+    val xml = Utility.trim(<field>
+      <row>
+        <stone>white</stone> <stone>nothing</stone>
+      </row> <row>
+        <stone>nothing</stone> <stone>black</stone>
+      </row>
+    </field>)
+
+    val json = "[[\"white\",\"nothing\"],[\"nothing\",\"black\"]]"
+
+    "work" when {
+      "serialize xml" in {
+        Utility.trim(sField.toXML) should be(xml)
+      }
+      "serialize json" in {
+        sField.json.toString should be(json)
+      }
+      "deserialize xml" in {
+        Field.fromXML(xml).get should be (sField)
+      }
+      "deserialize json" in {
+        Field.fromJSON(Json.parse(json)).get should be (sField)
+      }
+    }
+    "not work" when {
+      val slightlyBroken = Utility.trim(<ield>
+        <ro>
+          <stone>white</stone> <stone>nothing</stone>
+        </ro> <row>
+          <stone>nothing</stone> <stone>black</stone>
+        </row>
+      </ield>)
+
+      val fullyBroken = Utility.trim(<ield>
+        <ro>
+          <stone>white</stone> <stone>nothing</stone>
+        </ro> <row>
+          <stone>aifgholhjikafhbgojkadfhjg</stone> <stone>black</stone>
+        </row>
+      </ield>)
+
+      val json = "[[\"white\",\"adgafhadfgaf\"],[\"nothing\",\"black\"]]"
+
+      "only give a working parts" in {
+        Field.fromXML(slightlyBroken) shouldBe Success(Field(Matrix(Vector(Vector(Stone(NoStone), Stone(BlackStone))))))
+      }
+      "can't deserialize xml" in {
+        Field.fromXML(fullyBroken) shouldBe a[Failure[_]]
+      }
+      "deserialize json" in {
+        Field.fromJSON(Json.parse(json)) shouldBe a[Failure[_]]
       }
     }
   }

@@ -12,8 +12,8 @@
         <option value="de.htwg.se.reversi.controller.ControllerSpec" />
         <option value="de.htwg.se.reversi.controller.PutCommandSpec" />
         <option value="de.htwg.se.reversi.model.FieldSpec" />
-        <option value="de.htwg.se.reversi.model.StoneSpec" />
         <option value="de.htwg.se.reversi.model.MatrixSpec" />
+        <option value="de.htwg.se.reversi.model.GameStateSpec" />
         <option value="de.htwg.se.reversi.model.stone.StoneSpec" />
       </list>
     </option>

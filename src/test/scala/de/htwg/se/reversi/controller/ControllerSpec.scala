@@ -92,12 +92,44 @@ class ControllerSpec extends AnyWordSpec {
         val copyController = new Controller(using oldState.get)
         copyController.field.getStone(2, 2).get.state should be(BlackStone)
       }
+      "undo a move and redo" in {
+        val controller = Controller()
+        controller.put(3, 2)
+        controller.put(2, 2)
+        controller.field.getStone(3, 2).get.state should be(WhiteStone)
+        controller.field.getStone(2, 2).get.state should be(BlackStone)
+
+        controller.canRedo should be (false)
+        controller.canUndo should be (true)
+
+        controller.getLastCommand shouldBe a[PutCommand]
+
+        val oldState = controller.undo()
+        oldState should not be Failure
+        controller.field.getStone(2, 2).get.state should be(NoStone)
+
+        controller.canUndo should be (true)
+        controller.canRedo should be (true)
+
+        controller.redo()
+        controller.field.getStone(2, 2).get.state should be(BlackStone)
+      }
       "fail on empty history" in {
         val controller = Controller()
+        controller.canUndo should be (false)
         val oldState = controller.undo()
         oldState match
           case Failure(_) =>
           case Success(_) => fail()
+      }
+      "clear history" in {
+        val controller = Controller()
+        controller.put(3, 2)
+        controller.put(2, 2)
+
+        controller.canUndo should be (true)
+        controller.clearHistory()
+        controller.canUndo should be (false)
       }
     }
   }
